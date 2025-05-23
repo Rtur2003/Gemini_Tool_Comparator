@@ -1,0 +1,1510 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Araç Kataloğu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .cart-icon {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            margin-right: 15px;
+        }
+
+        .cart-icon i {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="header-content">
+            <div class="logo">
+                <h1><i class="fas fa-car"></i> OtoSatış</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/dashboard">Ana Sayfa</a></li>
+                    <li><a href="/catalog" class="active">Araçlar</a></li>
+                    <li><a href="/add_vehicle">Araç Ekle</a></li>
+                    <li><a href="/araclarim">Araçlarım</a></li>
+                    <li><a href="/iletisim">İletişim Destek</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <div class="cart-icon" id="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </div>
+                <div class="user-info" id="user-info">
+
+                    <span>{{ username }}</span>
+                    <a href="/logout" class="logout-btn" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Çıkış
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <h1>Araç Kataloğu</h1>
+
+    <!-- Filtre bölümü -->
+    <div class="filter-container">
+        <form id="filter-form" action="{{ url_for('catalog') }}" method="get">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="brand">Marka</label>
+                    <select name="brand" id="brand">
+                        <option value="">Tümü</option>
+                        <option value="Toyota">Toyota</option>
+                        <option value="Honda">Honda</option>
+                        <option value="Ford">Ford</option>
+                        <option value="BMW">BMW</option>
+                        <option value="Mercedes">Mercedes</option>
+                        <option value="Audi">Audi</option>
+                        <option value="Volkswagen">Volkswagen</option>
+                        <option value="Nissan">Nissan</option>
+                        <option value="Hyundai">Hyundai</option>
+                        <option value="Kia">Kia</option>
+                        <option value="Peugeot">Peugeot</option>
+                        <option value="Renault">Renault</option>
+                        <option value="Fiat">Fiat</option>
+                        <option value="Chevrolet">Chevrolet</option>
+                        <option value="Dodge">Dodge</option>
+                        <option value="Jeep">Jeep</option>
+                        <option value="Subaru">Subaru</option>
+                        <option value="Mazda">Mazda</option>
+                        <option value="Mitsubishi">Mitsubishi</option>
+                        <option value="Volvo">Volvo</option>
+                        <option value="Porsche">Porsche</option>
+                        <option value="Lexus">Lexus</option>
+                        <option value="Jaguar">Jaguar</option>
+                        <option value="Land Rover">Land Rover</option>
+                        <option value="Chrysler">Chrysler</option>
+                        <option value="Alfa Romeo">Alfa Romeo</option>
+                        <option value="Suzuki">Suzuki</option>
+                        <option value="Tesla">Tesla</option>
+                        <option value="Bugatti">Bugatti</option>
+                        <option value="Ferrari">Ferrari</option>
+                        <option value="Lamborghini">Lamborghini</option>
+                        <option value="Maserati">Maserati</option>
+                        <option value="Bentley">Bentley</option>
+                        <option value="Rolls-Royce">Rolls-Royce</option>
+                        <option value="Aston Martin">Aston Martin</option>
+                        <option value="Genesis">Genesis</option>
+                        <option value="Citroën">Citroën</option>
+                        <option value="Opel">Opel</option>
+                        <option value="Dacia">Dacia</option>
+                        <option value="Infiniti">Infiniti</option>
+                        <option value="Acura">Acura</option>
+                        <option value="Lincoln">Lincoln</option>
+                        <option value="Saab">Saab</option>
+                        <option value="Hummer">Hummer</option>
+                        <option value="Rivian">Rivian</option>
+                        <option value="Lucid">Lucid</option>
+                        <option value="Polestar">Polestar</option>
+                        <option value="McLaren">McLaren</option>
+
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="year-min">Min. Yıl</label>
+                    <input type="number" name="year_min" id="year-min" min="1900" max="2025" placeholder="2000">
+                </div>
+                <div class="filter-group">
+                    <label for="year-max">Max. Yıl</label>
+                    <input type="number" name="year_max" id="year-max" min="1900" max="2025" placeholder="2023">
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="price-min">Min. Fiyat</label>
+                    <input type="number" name="price_min" id="price-min" min="0" placeholder="50000">
+                </div>
+                <div class="filter-group">
+                    <label for="price-max">Max. Fiyat</label>
+                    <input type="number" name="price_max" id="price-max" min="0" placeholder="500000">
+                </div>
+                <div class="filter-group">
+                    <label for="fuel-type">Yakıt Türü</label>
+                    <select name="fuel_type" id="fuel-type">
+                        <option value="">Tümü</option>
+                        <option value="Benzin">Benzin</option>
+                        <option value="Dizel">Dizel</option>
+                        <option value="LPG">LPG</option>
+                        <option value="Elektrik">Elektrik</option>
+                        <option value="Hibrit">Hibrit</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-buttons">
+                <button type="reset" class="btn btn-reset">Temizle</button>
+                <button type="submit" class="btn btn-filter">Filtrele</button>
+            </div>
+        </form>
+    </div>
+    <!-- Araç listesi -->
+    {% if vehicles %}
+    <div class="vehicles-grid">
+        {% for vehicle in vehicles %}
+        <div class="vehicle-card">
+            {% if vehicle.Foto %}
+            <!-- BLOB'dan dönüştürülmüş Base64 fotoğraf -->
+            <img src="{{ vehicle.Foto }}" class="vehicle-image" alt="{{ vehicle.Marka }} {{ vehicle.Model }}"
+                 onerror="this.src= url_for('static', filename='images/default-car.jpg') | tojson | safe ">
+            {% else %}
+            <!-- Varsayılan fotoğraf, eğer fotoğraf yoksa -->
+            <img src="{{ url_for('static', filename='images/default-car.jpg') }}" class="vehicle-image"
+                 alt="Default car image">
+            {% endif %}
+            <div class="vehicle-details">
+                <h3 class="vehicle-title">{{ vehicle.Marka }} {{ vehicle.Model }}</h3>
+                <div class="vehicle-info">
+                    <span class="vehicle-spec">{{ vehicle.UretimYili }}</span>
+                    <span class="vehicle-spec">{{ vehicle.Kilometre|default('0', true) }} km</span>
+                    <span class="vehicle-spec">{{ vehicle.YakitTuru|default('Belirtilmemiş', true) }}</span>
+                </div>
+                <p class="vehicle-price">
+                    {% if vehicle.Fiyat is not none %}
+                    {{ "{:,.0f}".format(vehicle.Fiyat) }} TL
+                    {% else %}
+                    Fiyat Belirtilmemiş
+                    {% endif %}
+                </p>
+                <div class="vehicle-buttons">
+                    <a href="{{ url_for('vehicle_details', vehicle_id=vehicle.ArabaID) }}" class="btn btn-details">Detaylar</a>
+                    {% if username %}
+                    <button class="btn btn-buy add-to-cart" data-id="{{ vehicle.ArabaID }}"
+                            data-name="{{ vehicle.Marka }} {{ vehicle.Model }}"
+                            data-price="{{ vehicle.Fiyat }}"
+                            data-photo="{{ vehicle.Foto or url_for('static', filename='images/default-car.jpg') }}">
+                        Sepete Ekle
+                    </button>
+                    {% else %}
+                    <a href="{{ url_for('login_page') }}" class="btn btn-buy">Giriş Yap</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-vehicles">
+        <h2>Araç Bulunamadı</h2>
+        <p>Seçtiğiniz kriterlere uygun araç bulunmamaktadır.</p>
+    </div>
+    {% endif %}
+</main>
+<!-- Sepet Sidebar -->
+<div class="cart-sidebar" id="cart-sidebar">
+    <div class="cart-header">
+        <h3><i class="fas fa-shopping-cart"></i> Sepetiniz</h3>
+        <button class="cart-close" id="cart-close">&times;</button>
+    </div>
+    <div class="cart-items" id="cart-items">
+        <!-- Sepet öğeleri dinamik olarak eklenecek -->
+        <div class="empty-cart">
+            <i class="fas fa-shopping-cart"></i>
+            <p>Sepetiniz boş</p>
+        </div>
+    </div>
+    <div class="cart-footer">
+        <div class="cart-total">
+            <span>Toplam:</span>
+            <span class="total-price">0 TL</span>
+        </div>
+        <div class="cart-actions">
+            <button class="btn-checkout disabled" id="compare-button" disabled>Karşılaştır (2-5 Araç)</button>
+        </div>
+        <div class="cart-actions mt-2">
+            <button class="btn-order-now disabled" id="order-button" disabled>Sipariş Ver</button>
+        </div>
+        <div class="cart-actions mt-2">
+            <button class="btn-clear-cart" id="clear-cart" disabled>Sepeti Temizle</button>
+        </div>
+    </div>
+</div>
+
+<!-- Sepet Bildirimi -->
+<div class="cart-notification" id="cart-notification">
+    <i class="fas fa-check-circle"></i>
+    <span id="cart-notification-message"></span>
+</div>
+
+</footer>
+<script>
+    // 1️⃣ Araç listesini al
+fetch('http://127.0.0.1:5000/get_vehicle_list')
+.then(response => response.json())
+.then(data => {
+    if (data.success) {
+        console.log("Araç Listesi:", data.vehicles);
+        populateVehicleDropdown(data.vehicles); // Seçim için arayüzü güncelle
+    }
+})
+.catch(error => console.error("Araç listesi alınırken hata:", error));
+
+// 2️⃣ Kullanıcı seçim yapınca karşılaştırma yap
+function compareVehicles(selectedVehicleIds, userPreference) {
+    // Önce yükleniyor göster
+    document.getElementById('comparison-results').innerHTML = 
+        '<div class="loading">Karşılaştırma yapılıyor...</div>';
+    
+    fetch('http://127.0.0.1:5000/compare', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            vehicles: selectedVehicleIds.map(id => ({id: id})), // ID'leri obje olarak gönder
+            user_preference: userPreference,
+            lang: 0
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Karşılaştırma Sonucu:", data);
+        
+        if (data.success) {
+            // Sonuçları ekranda göster
+            displayComparisonResults(data.result);
+        } else {
+            // Hata mesajını göster
+            document.getElementById('comparison-results').innerHTML = 
+                `<div class="error">${data.error || 'Karşılaştırma başarısız oldu'}</div>`;
+        }
+    })
+    .catch(error => {
+        console.error("Karşılaştırma hatası:", error);
+        document.getElementById('comparison-results').innerHTML = 
+            `<div class="error">Karşılaştırma sırasında hata: ${error.message}</div>`;
+    });
+}
+
+// Global değişkenler
+let cart = [];
+const cartIcon = document.getElementById('cart-icon');
+const cartSidebar = document.getElementById('cart-sidebar');
+const cartItemsContainer = document.getElementById('cart-items');
+const cartCountElement = document.querySelector('.cart-count');
+
+// Sayfa yüklendiğinde gerekli işlemleri başlat
+document.addEventListener('DOMContentLoaded', () => {
+initializeModals();
+setupEventListeners();
+updateCartUI();
+});
+
+// Tüm modaları başlangıçta oluştur
+function initializeModals() {
+createConfirmModal();
+createCompareModal();
+createOrderModal();
+createSuccessModal();
+createPreferenceModal();
+}
+
+// Olay dinleyicilerini kur
+function setupEventListeners() {
+// Sepet ikonu tıklaması
+cartIcon.addEventListener('click', () => cartSidebar.classList.add('active'));
+
+// Sepet kapatma butonu
+document.getElementById('cart-close').addEventListener('click', () =>
+    cartSidebar.classList.remove('active'));
+
+// Ürün ekleme butonlarını ayarla
+setupAddToCartButtons();
+
+// Modallar için ESC ve dışarı tıklama ile kapatma
+setupModalCloseEvents();
+}
+
+// Sepete ürün ekleme butonlarını ayarla
+function setupAddToCartButtons() {
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', function() {
+        const vehicleId = this.dataset.id;
+        const vehicleName = this.dataset.name;
+        const vehiclePrice = parseFloat(this.dataset.price);
+
+        if (isVehicleInCart(vehicleId)) {
+            showNotification(`${vehicleName} zaten sepetinizde var`, 'info');
+            return;
+        }
+
+        if (cart.length >= 5) {
+            showNotification('Maksimum 5 araç karşılaştırabilirsiniz', 'error');
+            return;
+        }
+
+        addToCart(vehicleId, vehicleName, vehiclePrice);
+    });
+});
+}
+
+// Sepete ürün ekle
+function addToCart(id, name, price) {
+cart.push({
+    id: id,
+    name: name,
+    price: price,
+    quantity: 1
+});
+
+updateCartUI();
+showCartNotification(`${name} sepete eklendi`);
+updateCartCount();
+}
+
+// Sepetten ürün çıkar
+function removeFromCart(id) {
+const removedItem = cart.find(item => item.id === id);
+cart = cart.filter(item => item.id !== id);
+
+updateCartUI();
+
+if (removedItem) {
+    showCartNotification(`${removedItem.name} sepetten çıkarıldı`);
+}
+
+updateCartCount();
+}
+
+// Sepeti temizle
+function clearCart() {
+cart = [];
+updateCartUI();
+updateCartCount();
+showCartNotification('Sepet temizlendi');
+}
+
+// Ürün sepette var mı kontrol et
+function isVehicleInCart(id) {
+return cart.findIndex(item => item.id === id) >= 0;
+}
+
+// Sepet sayısını güncelle
+function updateCartCount() {
+const count = cart.length;
+cartCountElement.textContent = count;
+
+// Animasyon ekle
+cartCountElement.classList.add('pulse');
+setTimeout(() => cartCountElement.classList.remove('pulse'), 500);
+
+// Sıfır olduğunda görünürlüğü ayarla
+cartCountElement.classList.toggle('hidden', count === 0);
+}
+
+// Sepet UI'ını güncelle
+function updateCartUI() {
+// Sepet öğelerini güncelle
+updateCartItems();
+
+// Sepet footer'ını güncelle
+updateCartFooter();
+}
+
+// Sepet öğelerini güncelle
+function updateCartItems() {
+if (!cartItemsContainer) return;
+
+if (cart.length === 0) {
+    cartItemsContainer.innerHTML = `
+        <div class="empty-cart">
+            <i class="fas fa-shopping-cart"></i>
+            <p>Sepetiniz boş</p>
+        </div>
+    `;
+    return;
+}
+
+cartItemsContainer.innerHTML = '';
+
+cart.forEach(item => {
+    const cartItemElement = document.createElement('div');
+    cartItemElement.className = 'cart-item';
+    cartItemElement.dataset.id = item.id;
+
+    cartItemElement.innerHTML = `
+        <div class="cart-item-img-container">
+        </div>
+        <div class="cart-item-details">
+            <div class="cart-item-title">${item.name}</div>
+            <div class="cart-item-price">${item.price.toLocaleString()} TL</div>
+            <button class="cart-item-remove">
+                <i class="fas fa-trash"></i> Kaldır
+            </button>
+        </div>
+    `;
+
+    cartItemsContainer.appendChild(cartItemElement);
+});
+
+setupRemoveButtons();
+}
+
+// Sepetten ürün silme butonlarını ayarla
+function setupRemoveButtons() {
+document.querySelectorAll('.cart-item-remove').forEach(button => {
+    button.addEventListener('click', function() {
+        const cartItemElement = this.closest('.cart-item');
+        const itemId = cartItemElement.dataset.id;
+
+        // Animasyonlu silme
+        cartItemElement.classList.add('removing');
+        setTimeout(() => {
+            removeFromCart(itemId);
+        }, 300);
+    });
+});
+}
+
+// Sepet footer'ını güncelle
+function updateCartFooter() {
+const cartFooter = document.querySelector('.cart-footer');
+if (!cartFooter) return;
+
+const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);
+const isCompareDisabled = cart.length < 2 || cart.length > 5;
+
+cartFooter.innerHTML = cart.length === 0 ? `
+    <div class="cart-total">
+        <span>Toplam:</span>
+        <span class="total-price">0 TL</span>
+    </div>
+    <div class="cart-actions">
+        <button class="btn-checkout disabled" id="compare-button" disabled>Karşılaştır (2-5 Araç)</button>
+        <button class="btn-order-now disabled" id="order-button" disabled>Sipariş Ver</button>
+    </div>
+` : `
+    <div class="cart-actions cart-clear-container">
+        <button class="btn-clear-cart" id="clear-cart">
+            <i class="fas fa-trash-alt"></i> Sepeti Temizle
+        </button>
+    </div>
+    <div class="cart-total">
+        <span>Toplam:</span>
+        <span class="total-price">${totalPrice.toLocaleString()} TL</span>
+    </div>
+    <div class="cart-actions">
+        <button class="btn-checkout ${isCompareDisabled ? 'disabled' : ''}"
+                id="compare-button" ${isCompareDisabled ? 'disabled' : ''}>
+            Karşılaştır (2-5 Araç)
+        </button>
+        <button class="btn-order-now ${cart.length === 0 ? 'disabled' : ''}"
+                id="order-button" ${cart.length === 0 ? 'disabled' : ''}>
+            Sipariş Ver
+        </button>
+    </div>
+`;
+
+if (cart.length > 0) {
+    // Sepeti temizle butonuna olay dinleyicisi ekle
+    document.getElementById('clear-cart').addEventListener('click', showClearCartConfirmation);
+
+    // Karşılaştır butonuna olay dinleyicisi ekle
+    const compareBtn = document.getElementById('compare-button');
+    if (!compareBtn.disabled) {
+        compareBtn.addEventListener('click', showCompareSelectionModal);
+    }
+
+    // Sipariş ver butonuna olay dinleyicisi ekle
+    document.getElementById('order-button').addEventListener('click', showOrderModal);
+}
+}
+
+// Sepeti temizleme onayını göster
+function showClearCartConfirmation() {
+const confirmModal = document.getElementById('confirm-modal');
+const confirmMessage = document.getElementById('confirm-message');
+
+confirmMessage.innerHTML = `
+    <div class="confirm-icon warning">
+        <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <h4>Sepeti Temizle</h4>
+    <p>Sepetinizdeki tüm araçları kaldırmak istediğinize emin misiniz?</p>
+`;
+
+// Onay modal butonlarını ayarla
+document.querySelector('.confirm-actions').innerHTML = `
+    <button class="btn btn-secondary" id="cancel-clear">Vazgeç</button>
+    <button class="btn btn-danger" id="confirm-clear">Sepeti Temizle</button>
+`;
+
+// Butonlara olay dinleyicileri ekle
+document.getElementById('cancel-clear').addEventListener('click', () => {
+    confirmModal.classList.remove('active');
+});
+
+document.getElementById('confirm-clear').addEventListener('click', () => {
+    clearCart();
+    confirmModal.classList.remove('active');
+});
+
+confirmModal.classList.add('active');
+}
+
+// Sepet bildirimi göster
+function showCartNotification(message) {
+let notification = document.getElementById('cart-notification');
+
+// Notification elementi yoksa oluştur
+if (!notification) {
+    document.body.insertAdjacentHTML('beforeend', `
+        <div id="cart-notification" class="cart-notification">
+            <div id="cart-notification-message"></div>
+        </div>
+    `);
+    notification = document.getElementById('cart-notification');
+}
+
+document.getElementById('cart-notification-message').textContent = message;
+notification.classList.add('show');
+
+setTimeout(() => notification.classList.remove('show'), 2000);
+}
+
+// Genel bildirim göster
+function showNotification(message, type = 'success') {
+let notification = document.getElementById('notification');
+if (!notification) {
+    notification = document.createElement('div');
+    notification.id = 'notification';
+    document.body.appendChild(notification);
+}
+
+notification.textContent = message;
+notification.className = `notification ${type} show`;
+setTimeout(() => notification.classList.remove('show'), 3000);
+}
+
+// Karşılaştırma seçim modalını göster
+function showCompareSelectionModal() {
+    if (cart.length < 2 || cart.length > 5) {
+        showNotification('Karşılaştırma için 2-5 araç seçmelisiniz', 'error');
+        return;
+    }
+
+    const selectModal = document.getElementById('compare-selection-modal') || createCompareSelectionModal();
+    
+    // İçeriği doldur
+    const selectionContent = document.getElementById('compare-selection-content');
+    selectionContent.innerHTML = `
+        <p>Karşılaştırmak istediğiniz araçları seçin (en az 2, en fazla 5 araç):</p>
+        <div class="vehicle-selection-list">
+            ${cart.map(item => `
+                <div class="vehicle-selection-item">
+                    <input type="checkbox" id="select-${item.id}" data-id="${item.id}" checked>
+                    <label for="select-${item.id}">${item.name} - ${formatPrice(item.price)} TL</label>
+                </div>
+            `).join('')}
+        </div>
+        <div class="preference-selection mt-4">
+            <h4>Kullanım Amacınız</h4>
+            <p>Daha doğru öneriler için kullanım amacınızı seçin:</p>
+            <select id="user-preference" class="form-control">
+                <option value="Genel kullanım">Genel kullanım</option>
+                <option value="Şehir içi">Şehir içi</option>
+                <option value="Uzun yol">Uzun yol</option>
+                <option value="İş">İş</option>
+                <option value="Ekonomi">Ekonomi</option>
+                <option value="Performans">Performans</option>
+            </select>
+        </div>
+    `;
+
+    // Modalı göster
+    selectModal.classList.add('active');
+}
+
+// Modal oluşturma fonksiyonu
+function createCompareSelectionModal() {
+    const modalHtml = `
+        <div id="compare-selection-modal" class="modal-overlay">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Karşılaştırılacak Araçları Seçin</h3>
+                    <button class="modal-close" id="close-selection-modal">&times;</button>
+                </div>
+                <div class="modal-content" id="compare-selection-content">
+                    <!-- İçerik dinamik olarak doldurulacak -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="cancel-compare">Vazgeç</button>
+                    <button class="btn btn-primary" id="start-compare">Karşılaştır</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    const modal = document.getElementById('compare-selection-modal');
+    
+    // Kapat butonlarına olay dinleyicileri ekle
+    document.getElementById('close-selection-modal').addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+
+    document.getElementById('cancel-compare').addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+
+    document.getElementById('start-compare').addEventListener('click', startVehicleComparison);
+
+    return modal;
+}
+
+// Araç karşılaştırmasını başlat
+function startVehicleComparison() {
+    // Seçilen araçları topla
+    const selectedVehicles = [];
+    document.querySelectorAll('#compare-selection-content input[type="checkbox"]:checked').forEach(checkbox => {
+        const vehicleId = checkbox.dataset.id;
+        const vehicle = cart.find(item => item.id === vehicleId);
+        if (vehicle) {
+            selectedVehicles.push(vehicle);
+        }
+    });
+
+    // Kullanıcı tercihini al
+    const userPreference = document.getElementById('user-preference').value;
+
+    if (selectedVehicles.length < 2 || selectedVehicles.length > 5) {
+        showNotification('En az 2, en fazla 5 araç seçmelisiniz', 'error');
+        return;
+    }
+
+    // Karşılaştırma modalını kapat
+    const selectionModal = document.getElementById('compare-selection-modal');
+    if (selectionModal) {
+        selectionModal.classList.remove('active');
+    }
+
+    // Yükleniyor göster
+    showLoadingComparison();
+
+    // Sunucuya karşılaştırma isteği gönder
+    sendComparisonRequest(selectedVehicles, userPreference);
+}
+
+// Sunucuya karşılaştırma isteği gönder
+function sendComparisonRequest(vehicles, userPreference) {
+    const data = {
+        vehicles: vehicles,
+        user_preference: userPreference,
+        lang: 0
+    };
+
+    fetch('/compare', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        hideLoadingComparison();
+        displayComparisonResults(data.result, vehicles, userPreference);
+    })
+    .catch(error => {
+        console.error("Comparison request error:", error);
+        hideLoadingComparison();
+        displayLocalComparisonResults({ vehicles, user_preference: userPreference }, userPreference);
+    });
+}
+
+function displayComparisonResults(results, vehicles, userPreference) {
+    const resultsContainer = document.getElementById('comparison-results');
+    if (!resultsContainer) return;
+
+    // Güvenli veri yapısı oluştur
+    const safeResults = {
+        recommended: results.recommended || {
+            name: 'Önerilen Araç Bulunamadı',
+            reasons: ['Detaylı öneri için yeterli bilgi mevcut değil'],
+            price: 0,
+            features: []
+        },
+        alternative: results.alternative || {
+            name: 'Alternatif Araç Bulunamadı',
+            reasons: ['Alternatif araç önerisi oluşturulamadı'],
+            price: 0,
+            features: []
+        }
+    };
+
+    let html = `
+    <div class="comparison-container">
+        <div class="comparison-header">
+            <div class="header-content">
+                <h2>Araç Karşılaştırma Sonuçları</h2>
+                <div class="preference-detail">
+                    <span class="label">Kullanım Amacı:</span>
+                    <span class="value">${userPreference}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-results">
+            <div class="vehicle-comparison-wrapper">
+                <div class="vehicle-card recommended">
+                    <div class="vehicle-card-header">
+                        <div class="recommendation-badge">
+                            <i class="icon-recommended">★</i>
+                            <span>Önerilen Araç</span>
+                        </div>
+                    </div>
+                    <div class="vehicle-card-body">
+                        <div class="vehicle-main-info">
+                            <h4 class="vehicle-name">${safeResults.recommended.name}</h4>
+                            <div class="vehicle-price-container">
+                                <span class="vehicle-price-label">Tahmini Fiyat</span>
+                                <div class="vehicle-price">${formatPrice(safeResults.recommended.price)} TL</div>
+                            </div>
+                        </div>
+
+                        <div class="vehicle-details">
+                            <div class="vehicle-reasons">
+                                <h5 class="section-title">Önerilme Nedenleri</h5>
+                                <ul class="reasons-list">
+                                    ${safeResults.recommended.reasons.map(reason => `
+                                        <li>
+                                            <span class="reason-icon">✓</span>
+                                            <span class="reason-text">${reason}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+
+                            ${safeResults.recommended.features && safeResults.recommended.features.length > 0 ? `
+                            <div class="vehicle-features">
+                                <h5 class="section-title">Öne Çıkan Özellikler</h5>
+                                <ul class="features-list">
+                                    ${safeResults.recommended.features.map(feature => `
+                                        <li>
+                                            <span class="feature-icon">•</span>
+                                            <span class="feature-text">${feature}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>` : ''}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vehicle-card alternative">
+                    <div class="vehicle-card-header">
+                        <div class="recommendation-badge">
+                            <i class="icon-alternative">⋯</i>
+                            <span>Alternatif Araç</span>
+                        </div>
+                    </div>
+                    <div class="vehicle-card-body">
+                        <div class="vehicle-main-info">
+                            <h4 class="vehicle-name">${safeResults.alternative.name}</h4>
+                            <div class="vehicle-price-container">
+                                <span class="vehicle-price-label">Tahmini Fiyat</span>
+                                <div class="vehicle-price">${formatPrice(safeResults.alternative.price)} TL</div>
+                            </div>
+                        </div>
+
+                        <div class="vehicle-details">
+                            <div class="vehicle-reasons">
+                                <h5 class="section-title">Önerilme Nedenleri</h5>
+                                <ul class="reasons-list">
+                                    ${safeResults.alternative.reasons.map(reason => `
+                                        <li>
+                                            <span class="reason-icon">✓</span>
+                                            <span class="reason-text">${reason}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+
+                            ${safeResults.alternative.features && safeResults.alternative.features.length > 0 ? `
+                            <div class="vehicle-features">
+                                <h5 class="section-title">Öne Çıkan Özellikler</h5>
+                                <ul class="features-list">
+                                    ${safeResults.alternative.features.map(feature => `
+                                        <li>
+                                            <span class="feature-icon">•</span>
+                                            <span class="feature-text">${feature}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>` : ''}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-footer">
+            <div class="footer-content">
+                <p class="comparison-disclaimer">
+                    <i class="icon-info">ℹ</i>
+                    Fiyatlar ve öneriler yalnızca bilgilendirme amaçlıdır. Kesin fiyat ve detaylar için bayii ile iletişime geçmenizi öneririz.
+                </p>
+            </div>
+        </div>
+    </div>
+`;
+    resultsContainer.innerHTML = html;
+
+    // Sonuçları içeren modalı göster
+    const compareModal = document.getElementById('compare-results-modal');
+    if (compareModal) {
+        compareModal.classList.add('active');
+    }
+}
+
+// Fiyatı formatla (eğer zaten yoksa)
+function formatPrice(price) {
+    return price > 0 ? price.toLocaleString('tr-TR') : 'Fiyat Bilgisi Yok';
+}
+
+// Yerel karşılaştırma sonuçlarını göster
+function displayLocalComparisonResults(data, userPreference) {
+    const resultsContainer = document.getElementById('comparison-results');
+    if (!resultsContainer) return;
+
+    let vehiclesHtml = '';
+    data.vehicles.forEach(vehicle => {
+        vehiclesHtml += `
+            <div class="vehicle-comparison-card">
+                <h4>${vehicle.name}</h4>
+                <div class="price">${formatPrice(vehicle.price)} TL</div>
+                <div class="user-preference-indicator">
+                    <div class="badge badge-primary">${userPreference}</div>
+                </div>
+                <div class="comparison-warning">
+                    <small>Sunucu hatası nedeniyle kısıtlı karşılaştırma yapılmıştır.</small>
+                </div>
+            </div>
+        `;
+    });
+
+    resultsContainer.innerHTML = `
+        <div class="comparison-results-container">
+            <div class="comparison-warning-banner">
+                <p>⚠️ Sunucu hatası nedeniyle kısıtlı karşılaştırma gösterilmektedir.</p>
+            </div>
+            <div class="preference-summary">
+                <p>Seçili kullanım amacı: <strong>${userPreference}</strong></p>
+            </div>
+            <div class="vehicles-grid">
+                ${vehiclesHtml}
+            </div>
+        </div>
+    `;
+    
+    // Sonuçları içeren modalı göster
+    const compareModal = document.getElementById('compare-results-modal');
+    if (compareModal) {
+        compareModal.classList.add('active');
+    }
+}
+
+// Karşılaştırma yükleniyor göster
+function showLoadingComparison() {
+    let compareModal = document.getElementById('compare-results-modal') || createCompareResultsModal();
+
+    // Yükleniyor içeriğini göster
+    const resultsElement = document.getElementById('comparison-results');
+    if (resultsElement) {
+        resultsElement.innerHTML = `
+            <div class="loading-comparison">
+                <div class="spinner"></div>
+                <p>Araçlar karşılaştırılıyor...</p>
+                <small>Bu işlem birkaç saniye sürebilir</small>
+            </div>
+        `;
+    }
+
+    // Modalı göstermeyi güvenli hale getir
+    compareModal.classList.add('active');
+}
+
+// Karşılaştırma sonuçları modalını oluştur
+function createCompareResultsModal() {
+    const modalHtml = `
+        <div class="modal-overlay" id="compare-results-modal">
+            <div class="modal comparison-modal">
+                <div class="modal-header">
+                    <h3 class="modal-title">Araç Karşılaştırma</h3>
+                    <button class="modal-close" id="close-compare-results">&times;</button>
+                </div>
+                <div class="modal-content">
+                    <div id="comparison-results"></div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+    // Kapat butonuna olay ekle
+    const closeButton = document.getElementById('close-compare-results');
+    if (closeButton) {
+        closeButton.addEventListener('click', () => {
+            const modal = document.getElementById('compare-results-modal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        });
+    }
+
+    return document.getElementById('compare-results-modal');
+}
+
+// Fiyatı formatla
+function formatPrice(price) {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+// Gelişmiş bildirim fonksiyonu
+function showEnhancedNotification(message, type = 'info') {
+    // Mevcut bildirim elementini kaldır
+    const existingNotification = document.getElementById('enhanced-notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+
+    // Yeni bildirim elementi oluştur
+    const notification = document.createElement('div');
+    notification.id = 'enhanced-notification';
+    notification.className = `notification ${type}`;
+    
+    const icon = type === 'error' ? 'fas fa-times-circle' : 'fas fa-info-circle';
+    
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="${icon}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+
+    document.body.appendChild(notification);
+
+    // Bildirimi 3 saniye sonra kaldır
+    setTimeout(() => {
+        if (notification) {
+            notification.classList.add('fade-out');
+            setTimeout(() => {
+                notification.remove();
+            }, 500);
+        }
+    }, 3000);
+}
+
+// Bildirim stilini ekle
+const notificationStyle = document.createElement('style');
+notificationStyle.textContent = `
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        z-index: 1000;
+        transition: all 0.5s ease;
+    }
+
+    .notification.error {
+        background-color: #fff5f5;
+        border-left: 4px solid #ff6b6b;
+    }
+
+    .notification.info {
+        background-color: #f0f9ff;
+        border-left: 4px solid #4dabf7;
+    }
+
+    .notification-content {
+        display: flex;
+        align-items: center;
+    }
+
+    .notification-content i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+    }
+
+    .notification.error i {
+        color: #ff6b6b;
+    }
+
+    .notification.info i {
+        color: #4dabf7;
+    }
+
+    .notification.fade-out {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+`;
+document.head.appendChild(notificationStyle);
+
+// Mevcut showNotification fonksiyonunu güncelle
+function showNotification(message, type) {
+    showEnhancedNotification(message, type);
+}
+
+// Karşılaştırma yükleniyor gizle
+function hideLoadingComparison() {
+    const loadingElement = document.querySelector('.loading-comparison');
+    if (loadingElement) {
+        loadingElement.remove();
+    }
+}
+
+// Olay dinleyicilerini ayarla
+document.addEventListener('DOMContentLoaded', () => {
+    const compareButton = document.getElementById('compare-vehicles');
+    if (compareButton) {
+        compareButton.addEventListener('click', showCompareSelectionModal);
+    }
+});
+// Karşılaştırma için CSS stillerini ekle
+function addComparisonStyles() {
+// Stil zaten varsa ekleme
+if (document.getElementById('comparison-styles')) return;
+
+const styleElement = document.createElement('style');
+styleElement.id = 'comparison-styles';
+styleElement.textContent = `
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --background-light: #f4f6f7;
+    --text-dark: #333;
+    --border-soft: #e0e0e0;
+    --recommended-color: #2ecc71;
+    --alternative-color: #3498db;
+}
+
+.comparison-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.comparison-header {
+    background-color: var(--background-light);
+    padding: 20px;
+    text-align: center;
+}
+
+.header-content h2 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.preference-detail {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.preference-detail .label {
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.preference-detail .value {
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+.vehicle-comparison-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 30px;
+}
+
+.vehicle-card {
+    flex: 1;
+    border-radius: 15px;
+    border: 1px solid var(--border-soft);
+    transition: all 0.3s ease;
+}
+
+.vehicle-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.vehicle-card-header {
+    padding: 15px;
+    text-align: center;
+}
+
+.recommendation-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: white;
+    font-weight: 600;
+}
+
+.recommended .recommendation-badge {
+    background-color: var(--recommended-color);
+}
+
+.alternative .recommendation-badge {
+    background-color: var(--alternative-color);
+}
+
+.recommendation-badge .icon-recommended,
+.recommendation-badge .icon-alternative {
+    font-size: 1.5rem;
+}
+
+.vehicle-card-body {
+    padding: 25px;
+}
+
+.vehicle-main-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.vehicle-name {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.vehicle-price-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.vehicle-price-label {
+    color: var(--text-dark);
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.vehicle-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--recommended-color);
+}
+
+.section-title {
+    border-bottom: 2px solid var(--secondary-color);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.reasons-list,
+.features-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.reasons-list li,
+.features-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.reason-icon,
+.feature-icon {
+    margin-right: 10px;
+    color: var(--secondary-color);
+}
+
+.comparison-footer {
+    background-color: var(--background-light);
+    padding: 20px;
+    text-align: center;
+}
+
+.comparison-disclaimer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.comparison-disclaimer .icon-info {
+    color: var(--secondary-color);
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .vehicle-comparison-wrapper {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+`;
+
+document.head.appendChild(styleElement);
+}
+// Modalları kapatma olaylarını ayarla
+function setupModalCloseEvents() {
+// ESC tuşu ile modalları kapatma
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            if (modal.classList.contains('active')) {
+                modal.classList.remove('active');
+            }
+        });
+    }
+});
+
+// Modal dışına tıklayınca kapatma
+document.querySelectorAll('.modal-overlay').forEach(modal => {
+    modal.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.classList.remove('active');
+        }
+    });
+});
+}
+
+// Onay modalını oluştur
+function createConfirmModal() {
+if (!document.getElementById('confirm-modal')) {
+    document.body.insertAdjacentHTML('beforeend', `
+        <div class="modal-overlay" id="confirm-modal">
+            <div class="modal confirm-modal">
+                <div class="modal-content">
+                    <div id="confirm-message"></div>
+                    <div class="confirm-actions"></div>
+                </div>
+            </div>
+        </div>
+    `);
+}
+}
+
+// Karşılaştırma modalını oluştur
+function createCompareModal() {
+// Burada karşılaştırma modalı oluşturulacak
+// Kodun kısalığı için içeriği eklenmedi
+}
+
+// Sipariş modalını oluştur
+function createOrderModal() {
+// Burada sipariş modalı oluşturulacak
+// Kodun kısalığı için içeriği eklenmedi
+}
+
+// Başarı modalını oluştur
+function createSuccessModal() {
+// Burada başarı modalı oluşturulacak
+// Kodun kısalığı için içeriği eklenmedi
+}
+// Tercih modalını oluştur
+function createPreferenceModal() {
+    // Burada tercih modalı oluşturulacak
+    // Kodun kısalığı için içeriği eklenmedi
+}
+
+// Sipariş modalını göster
+function showOrderModal() {
+    // Sepette ürün varsa ödeme sayfasına yönlendir
+    if (cart.length > 0) {
+        window.location.href = "/odeme";
+    } else {
+        showNotification('Sepetiniz boş, sipariş veremezsiniz', 'error');
+    }
+}
+</script>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+const detailButtons = document.querySelectorAll('.btn-details');
+
+// Modal HTML'ini sayfaya ekle
+const modalHTML = `
+    <div id="vehicleModal" class="vehicle-modal">
+        <div class="vehicle-modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-title">Araç Detayları</h2>
+            <div class="vehicle-info-container">
+                <div class="vehicle-image">
+    <img id="modal-image" 
+         src="/static/images/default-car.jpg" 
+         alt="Araç Görseli"
+         onerror="this.onerror=null; this.src='/static/images/default-car.jpg'">
+</div>
+                <div class="vehicle-details">
+                    <div class="detail-row">
+                        <h3>Temel Bilgiler</h3>
+                        <p><strong>Marka:</strong> <span id="modal-marka"></span></p>
+                        <p><strong>Model:</strong> <span id="modal-model"></span></p>
+                        <p><strong>Üretim Yılı:</strong> <span id="modal-yil"></span></p>
+                        <p><strong>Kilometre:</strong> <span id="modal-km"></span> km</p>
+                        <p><strong>Fiyat:</strong> <span id="modal-fiyat"></span> TL</p>
+                        <p><strong>Renk:</strong> <span id="modal-renk"></span></p>
+                    </div>
+                    <div class="detail-row">
+                        <h3>Teknik Özellikler</h3>
+                        <p><strong>Yakıt Türü:</strong> <span id="modal-yakit"></span></p>
+                        <p><strong>Motor Hacmi:</strong> <span id="modal-motor-hacmi"></span></p>
+                        <p><strong>Motor Gücü:</strong> <span id="modal-motor-gucu"></span> HP</p>
+                        <p><strong>Vites Türü:</strong> <span id="modal-vites"></span></p>
+                        <p><strong>Kasa Türü:</strong> <span id="modal-kasa"></span></p>
+                    </div>
+                    <div class="detail-row">
+                        <h3>Diğer Özellikler</h3>
+                        <p><strong>Kapı Sayısı:</strong> <span id="modal-kapi"></span></p>
+                        <p><strong>Yolcu Kapasitesi:</strong> <span id="modal-yolcu"></span></p>
+                        <p><strong>Bagaj Hacmi:</strong> <span id="modal-bagaj"></span> lt</p>
+                        <p><strong>Hasar Durumu:</strong> <span id="modal-hasar"></span></p>
+                        <p><strong>Hasar Maliyeti:</strong> <span id="modal-hasar-maliyet"></span> TL</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+`;
+
+// Modal HTML'ini sayfaya ekle
+document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+const modal = document.getElementById('vehicleModal');
+const closeBtn = document.querySelector('.close-modal');
+
+// Modal kapatma işlevi
+closeBtn.onclick = function() {
+    modal.style.display = "none";
+}
+
+// Modal dışına tıklandığında kapatma
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+// Detay butonlarına tıklama olayı ekle
+detailButtons.forEach(button => {
+    button.addEventListener('click', function (e) {
+        e.preventDefault();
+        const vehicleId = button.getAttribute('href').split('/').pop();
+        console.log("Vehicle ID:", vehicleId);
+
+        fetch(`/vehicle-details/${vehicleId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Sunucu hatası: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    // Modal içeriğini doldur
+                    document.getElementById('modal-marka').textContent = data.Marka || 'Belirtilmemiş';
+                    document.getElementById('modal-model').textContent = data.Model || 'Belirtilmemiş';
+                    document.getElementById('modal-yil').textContent = data.UretimYili || 'Belirtilmemiş';
+                    document.getElementById('modal-km').textContent = data.Kilometre ? data.Kilometre.toLocaleString() : 'Belirtilmemiş';
+                    document.getElementById('modal-fiyat').textContent = data.Fiyat ? data.Fiyat.toLocaleString() : 'Belirtilmemiş';
+                    document.getElementById('modal-renk').textContent = data.Renk || 'Belirtilmemiş';
+                    document.getElementById('modal-yakit').textContent = data.YakitTuru || 'Belirtilmemiş';
+                    document.getElementById('modal-motor-hacmi').textContent = data.MotorHacmi || 'Belirtilmemiş';
+                    document.getElementById('modal-motor-gucu').textContent = data.MotorGucu || 'Belirtilmemiş';
+                    document.getElementById('modal-vites').textContent = data.VitesTuru || 'Belirtilmemiş';
+                    document.getElementById('modal-kasa').textContent = data.KasaTuru || 'Belirtilmemiş';
+                    document.getElementById('modal-kapi').textContent = data.KapiSayisi || 'Belirtilmemiş';
+                    document.getElementById('modal-yolcu').textContent = data.YolcuKapasitesi || 'Belirtilmemiş';
+                    document.getElementById('modal-bagaj').textContent = data.BagajHacmi || 'Belirtilmemiş';
+                    document.getElementById('modal-hasar').textContent = data.HasarDurumu || 'Belirtilmemiş';
+                    document.getElementById('modal-hasar-maliyet').textContent = data.HasarMaliyeti ? data.HasarMaliyeti.toLocaleString() : 'Belirtilmemiş';
+
+                    // Araç fotoğrafını güncelle
+                    if (data.Foto && typeof data.Foto === 'string') {
+                    // Base64 formatında gelen BLOB verisi
+                          document.getElementById('modal-image').src = data.Foto;
+                        } else {
+                   // Fotoğraf yoksa varsayılan görsel
+                         document.getElementById('modal-image').src = "/static/images/default-car.jpg";
+                        }
+                        // Modal başlığını güncelle
+                        document.getElementById('modal-title').textContent = `${data.Marka} ${data.Model} (${data.UretimYili})`;
+
+                        // Modalı göster
+                        modal.style.display = "block";
+                    }
+                })
+                .catch(error => {
+                    console.error('Hata:', error);
+                    alert('Araç bilgileri alınırken bir hata oluştu. Lütfen tekrar deneyin.');
+                });
+        });
+    });
+});
+</script>
+</body>
+</html>

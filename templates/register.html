@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Ol - Yüz Tanıma Sistemi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #858796;
+            --success-color: #1cc88a;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --input-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            --button-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background: var(--bg-gradient);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            padding: 20px 0;
+        }
+
+        .container {
+            max-width: 900px;
+            padding: 20px;
+        }
+
+        .card {
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            border: none;
+            padding: 40px;
+            background: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: rgba(78, 115, 223, 0.05);
+            border-radius: 50%;
+            top: -75px;
+            right: -75px;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(78, 115, 223, 0.05);
+            border-radius: 50%;
+            bottom: -50px;
+            left: -50px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-align: center;
+            font-size: 2.2rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 4px;
+            background: var(--primary-color);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            background-color: #f8f9fc;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .form-section:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--input-shadow);
+            background-color: #f0f4ff;
+        }
+
+        .form-section-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .form-section-title::before {
+            content: '';
+            position: absolute;
+            width: 5px;
+            height: 100%;
+            background: var(--primary-color);
+            left: 0;
+            top: 0;
+            border-radius: 3px;
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--input-shadow);
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-custom {
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: var(--button-shadow);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .camera-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        #videoElement {
+            width: 350px;
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        #videoElement:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        .status-text {
+            margin-top: 15px;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .face-scan-animation {
+            width: 80%;
+            max-width: 350px;
+            height: 6px;
+            background-color: #e8e8e8;
+            position: relative;
+            margin: 15px auto;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .face-scan-animation::before {
+            content: '';
+            position: absolute;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+            animation: scanning 2.5s ease-in-out infinite;
+            border-radius: 3px;
+        }
+
+        @keyframes scanning {
+            0% { width: 0%; left: 0; }
+            50% { width: 30%; left: 35%; }
+            100% { width: 0%; left: 100%; }
+        }
+
+        .input-group-text {
+            background-color: #f8f9fc;
+            border-radius: 10px 0 0 10px;
+            border: 1px solid #e2e8f0;
+            color: var(--primary-color);
+        }
+
+        .form-floating .form-control {
+            height: calc(3.5rem + 2px);
+            padding: 1rem 0.75rem;
+        }
+
+        .form-floating label {
+            padding: 1rem 0.75rem;
+        }
+
+        .alert {
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid;
+        }
+
+        .alert-success {
+            border-left-color: var(--success-color);
+        }
+
+        .alert-danger {
+            border-left-color: #e74a3b;
+        }
+
+        .form-text {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        /* Responsive düzenlemeler */
+        @media (max-width: 767.98px) {
+            .container {
+                padding: 10px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .form-section {
+                padding: 15px;
+            }
+
+            #videoElement {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1>Yüz Tanıma ile Kayıt</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} d-flex align-items-center">
+            <i class="fas fa-{% if category == 'success' %}check-circle{% else %}exclamation-circle{% endif %} me-2"></i>
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form id="registerForm" action="{{ url_for('register') }}" method="POST">
+            <div class="form-section">
+                <div class="form-section-title"><i class="fas fa-user me-2"></i>Kişisel Bilgiler</div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="username" class="form-label">Kullanıcı Adı</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
+                            <input type="text" class="form-control" id="username" name="username" required placeholder="Kullanıcı adınızı girin">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" class="form-control" id="email" name="email" required pattern=".*@gmail\.com$" placeholder="örnek@gmail.com">
+                        </div>
+                        <div class="invalid-feedback">Email adresi @gmail.com ile bitmelidir.</div>
+                        <div class="form-text">Sadece Gmail hesapları kabul edilmektedir.</div>
+                    </div>
+                </div>
+                <div class="row g-3 mt-1">
+                    <div class="col-md-6">
+                        <label for="password" class="form-label">Şifre</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" id="password" name="password" required placeholder="Şifrenizi girin">
+                        </div>
+                        <div class="invalid-feedback" id="passwordError">
+                            Şifre en az 8 karakter uzunluğunda olmalı ve en az bir rakam, bir büyük harf ve bir küçük harf içermelidir.
+                        </div>
+                        <div class="form-text">En az 8 karakter, 1 rakam, 1 büyük ve 1 küçük harf</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="confirm_password" class="form-label">Şifre Tekrar</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required placeholder="Şifrenizi tekrar girin">
+                        </div>
+                        <div class="invalid-feedback" id="confirmPasswordError">Şifreler eşleşmiyor.</div>
+                    </div>
+                </div>
+                <div class="row g-3 mt-1">
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label">Telefon</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                            <input type="text" class="form-control" id="phone" name="phone" pattern="5[0-9]{9}" placeholder="5xxxxxxxxx" required>
+                        </div>
+                        <div class="invalid-feedback">Telefon numarası 5 ile başlamalı ve 10 haneli olmalıdır.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="birth_date" class="form-label">Doğum Tarihi</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                            <input type="date" class="form-control" id="birth_date" name="birth_date" required>
+                        </div>
+                        <div class="invalid-feedback">Lütfen geçerli bir doğum tarihi giriniz. 18 yaşından büyük olmalısınız.</div>
+                    </div>
+                </div>
+                <div class="row g-3 mt-1">
+                    <div class="col-md-6">
+                        <label class="form-label">Cinsiyet</label>
+                        <div class="d-flex">
+                            <div class="form-check me-4">
+                                <input class="form-check-input" type="radio" name="gender" id="gender_male" value="Erkek" required>
+                                <label class="form-check-label" for="gender_male"><i class="fas fa-male me-1"></i> Erkek</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="gender_female" value="Kadın">
+                                <label class="form-check-label" for="gender_female"><i class="fas fa-female me-1"></i> Kadın</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="address" class="form-label">Adres</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            <textarea class="form-control" id="address" name="address" rows="2" required placeholder="Adresinizi girin"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-section-title"><i class="fas fa-camera me-2"></i>Yüz Tanıma</div>
+                <div class="camera-container">
+                    <video id="videoElement" autoplay playsinline></video>
+                </div>
+                <div class="canvas-container">
+                    <canvas id="canvas"></canvas>
+                </div>
+                <div class="face-scan-animation"></div>
+                <p id="scanStatus" class="status-text">Kamera başlatılıyor...</p>
+            </div>
+
+            <input type="hidden" id="image_data" name="image_data">
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <a href="{{ url_for('index') }}" class="btn btn-secondary btn-custom me-md-2">
+                    <i class="fas fa-arrow-left me-2"></i>Geri Dön
+                </a>
+                <button type="submit" id="captureBtn" class="btn btn-primary btn-custom" disabled>
+                    <i class="fas fa-camera me-2"></i>Yüzünü Tara ve Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Kamera erişimi ve yüz tanıma işlemleri
+    const video = document.getElementById('videoElement');
+    const canvas = document.getElementById('canvas');
+    const captureBtn = document.getElementById('captureBtn');
+    const registerForm = document.getElementById('registerForm');
+    const scanStatus = document.getElementById('scanStatus');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm_password');
+    const birthDate = document.getElementById('birth_date');
+
+    // Yüz verisi kontrolü için
+    let faceImageData = null;
+
+    // Şifre doğrulama fonksiyonu
+    function validatePassword(password) {
+        const minLength = 8;
+        const hasNumber = /\d/.test(password); // En az bir rakam
+        const hasUpperCase = /[A-Z]/.test(password); // En az bir büyük harf
+        const hasLowerCase = /[a-z]/.test(password); // En az bir küçük harf
+
+        return password.length >= minLength && hasNumber && hasUpperCase && hasLowerCase;
+    }
+
+    // Şifre ve şifre tekrarı eşleşme kontrolü
+    function validateConfirmPassword(password, confirmPassword) {
+        return password === confirmPassword;
+    }
+
+    // Form doğrulama
+    function validateForm() {
+        let isValid = true;
+
+        // Şifre doğrulama
+        if (!validatePassword(password.value)) {
+            document.getElementById('passwordError').style.display = 'block';
+            password.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            document.getElementById('passwordError').style.display = 'none';
+            password.classList.remove('is-invalid');
+        }
+
+        // Şifre tekrarı doğrulama
+        if (!validateConfirmPassword(password.value, confirmPassword.value)) {
+            document.getElementById('confirmPasswordError').style.display = 'block';
+            confirmPassword.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            document.getElementById('confirmPasswordError').style.display = 'none';
+            confirmPassword.classList.remove('is-invalid');
+        }
+
+        // Doğum tarihi kontrolü
+        const today = new Date();
+        const birthDateValue = new Date(birthDate.value);
+        const age = today.getFullYear() - birthDateValue.getFullYear();
+        const monthDiff = today.getMonth() - birthDateValue.getMonth();
+
+        if (birthDateValue > today ||
+            (age < 18 || (age === 18 && monthDiff < 0)) ||
+            age > 100) {
+            birthDate.nextElementSibling.style.display = 'block';
+            birthDate.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            birthDate.nextElementSibling.style.display = 'none';
+            birthDate.classList.remove('is-invalid');
+        }
+
+        return isValid;
+    }
+
+    // Kamera erişimi
+    async function startCamera() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    width: 640,
+                    height: 480,
+                    facingMode: 'user'
+                }
+            });
+            video.srcObject = stream;
+            scanStatus.textContent = "Kamera hazır. Yüzünüzü merkezde tutun.";
+            captureBtn.disabled = false;
+        } catch (err) {
+            scanStatus.textContent = "Kamera erişimi reddedildi veya bir hata oluştu.";
+            console.error("Kamera erişim hatası:", err);
+        }
+    }
+
+    startCamera();
+
+    // Yüz yakalama butonu
+    captureBtn.addEventListener('click', async function() {
+        const context = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Base64 formatında görüntü verisi
+        faceImageData = canvas.toDataURL('image/jpeg');
+        document.getElementById('image_data').value = faceImageData;
+
+        // Önce form doğrulamasını yap
+        if (!validateForm()) {
+            scanStatus.textContent = "Form doğrulama hatası. Lütfen bilgilerinizi kontrol edin.";
+            return;
+        }
+
+        scanStatus.textContent = "Yüz taraması tamamlandı! Kaydediliyor...";
+        captureBtn.disabled = true;
+
+        // Form ve yüz verisi başarıyla hazırlandı, şimdi sunucuya gönder
+        try {
+            // Form verisini hazırla
+            const formData = new FormData(registerForm);
+
+            // Eğer görüntü verisi varsa, formData'ya ekle
+            if (faceImageData) {
+                formData.set('image_data', faceImageData);
+            }
+
+            // Sunucuya POST isteği gönder
+            const response = await fetch(registerForm.action, {
+                method: 'POST',
+                body: formData,
+                redirect: 'follow',
+                credentials: 'same-origin'
+            });
+
+            // Sunucu yanıtını kontrol et
+            if (response.ok) {
+                try {
+                    const data = await response.json();
+
+                    // Hem form hem de yüz verisi başarıyla kaydedildi mi kontrol et
+                    if (data.formSuccess && data.faceSuccess) {
+                        scanStatus.textContent = "Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...";
+                        setTimeout(() => {
+                            window.location.href = "/login_page";
+                        }, 2000);
+                    } else if (data.formSuccess) {
+                        scanStatus.textContent = "Form kaydedildi ancak yüz verisi kaydedilemedi. Lütfen tekrar deneyin.";
+                        captureBtn.disabled = false;
+                    } else if (data.faceSuccess) {
+                        scanStatus.textContent = "Yüz verisi kaydedildi ancak form kaydedilemedi. Lütfen tekrar deneyin.";
+                        captureBtn.disabled = false;
+                    } else {
+                        scanStatus.textContent = "Kayıt başarısız. Lütfen tekrar deneyin.";
+                        captureBtn.disabled = false;
+                    }
+                } catch (jsonError) {
+                    // Sunucu JSON yanıtı göndermedi, ancak HTTP durumu başarılı
+                    // Sunucu yanıtını kontrol etmeye çalış
+                    if (response.status === 200) {
+                        scanStatus.textContent = "Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...";
+                        setTimeout(() => {
+                            window.location.href = "/login_page";
+                        }, 2000);
+                    } else {
+                        scanStatus.textContent = "Kayıt durumu belirlenemedi. Lütfen tekrar deneyin.";
+                        captureBtn.disabled = false;
+                    }
+                }
+            } else {
+                // HTTP hatası
+                try {
+                    const errorData = await response.json();
+                    scanStatus.textContent = errorData.message || "Kayıt başarısız, lütfen tekrar deneyin.";
+                } catch (jsonError) {
+                    scanStatus.textContent = "Kayıt başarısız, lütfen tekrar deneyin.";
+                }
+                captureBtn.disabled = false;
+            }
+        } catch (error) {
+            console.error("Kayıt sırasında hata oluştu:", error);
+            scanStatus.textContent = "Bir hata oluştu, lütfen tekrar deneyin.";
+            captureBtn.disabled = false;
+        }
+    });
+
+    // Input doğrulama hataları için olay dinleyicileri
+    const inputs = document.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('input', function() {
+            if (input.validity.valid) {
+                input.classList.remove('is-invalid');
+                if (input.nextElementSibling && input.nextElementSibling.classList.contains('invalid-feedback')) {
+                    input.nextElementSibling.style.display = 'none';
+                }
+            } else {
+                input.classList.add('is-invalid');
+                if (input.nextElementSibling && input.nextElementSibling.classList.contains('invalid-feedback')) {
+                    input.nextElementSibling.style.display = 'block';
+                }
+            }
+        });
+    });
+
+    // Form gönderimini dinle
+    registerForm.addEventListener('submit', function(event) {
+        if (!validateForm()) {
+            event.preventDefault(); // Formu gönderme
+        }
+    });
+
+    // Şifre alanı değiştiğinde doğrulama yap
+    password.addEventListener('input', function() {
+        validateForm();
+    });
+
+    // Şifre tekrarı alanı değiştiğinde doğrulama yap
+    confirmPassword.addEventListener('input', function() {
+        validateForm();
+    });
+</script>
+</body>
+</html>

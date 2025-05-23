@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OtoSatış - Türkiye'nin Güvenilir Araç Platformu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo h1 {
+            color: #1e5799;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: #555;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 0;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #1e5799;
+        }
+
+        nav a.active {
+            color: #1e5799;
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #1e5799;
+            border-radius: 3px;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .cart-icon {
+            position: relative;
+            font-size: 20px;
+            color: #555;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .cart-icon:hover {
+            color: #1e5799;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-btn {
+            background-color: #1e5799;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .auth-btn:hover {
+            background-color: #144a80;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-info span {
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background-color: transparent;
+            color: #555;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .logout-btn:hover {
+            color: #1e5799;
+        }
+
+        /* Banner */
+        .banner {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/api/placeholder/1200/600') no-repeat center;
+            background-size: cover;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .banner-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .banner h2 {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .banner p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background-color: #1e5799;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: #144a80;
+        }
+
+        /* Araç Bölümü */
+        .featured-section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+            font-size: 32px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: #1e5799;
+        }
+
+        .car-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .car-card {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .car-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .car-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .car-card h3 {
+            padding: 15px 15px 5px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .car-info {
+            padding: 0 15px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .car-price {
+            font-weight: bold;
+            color: #1e5799;
+            font-size: 20px;
+        }
+
+        .car-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-cart {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-cart:hover {
+            background-color: #219653;
+        }
+
+        .btn-details {
+            background-color: #f5f5f5;
+            color: #1e5799;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-details:hover {
+            background-color: #e0e0e0;
+        }
+
+        .car-specs {
+            display: flex;
+            padding: 10px 15px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .car-spec {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-right: 15px;
+            color: #666;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 100%;
+            padding: 30px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            color: #777;
+            cursor: pointer;
+        }
+
+        .modal-title {
+            text-align: center;
+            font-size: 24px;
+            color: #1e5799;
+            margin-bottom: 20px;
+        }
+
+        .modal-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #777;
+            position: relative;
+        }
+
+        .modal-tab.active {
+            color: #1e5799;
+        }
+
+        .modal-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #1e5799;
+        }
+
+        .modal-content {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .auth-form input {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .auth-form input:focus {
+            border-color: #1e5799;
+            outline: none;
+        }
+
+        .face-auth {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .face-preview {
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            border: 2px dashed #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .face-camera {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .face-placeholder {
+            color: #999;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .face-placeholder i {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .face-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            background-color: #f5f5f5;
+            color: #333;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+        .face-scan {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #1e5799;
+            animation: scan 2s linear infinite;
+            display: none;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: calc(100% - 4px); }
+        }
+
+        .face-status {
+            font-weight: 600;
+            color: #777;
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #222;
+            color: #fff;
+            padding: 40px 0;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .footer-column h3 {
+            color: #fff;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-column p {
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            z-index: 200;
+            transition: right 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-header h3 {
+            font-size: 20px;
+            color: #1e5799;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-close {
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            color: #777;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-img {
+            width: 80px;
+            height: 60px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: #1e5799;
+            font-weight: 600;
+        }
+
+        .cart-item-remove {
+            background: transparent;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+        }
+
+        .cart-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .btn-checkout {
+            width: 100%;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .welcome-message {
+            background-color: #1e5799;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Add styles for the add vehicle form */
+        .add-vehicle-form {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .btn-checkout:hover {
+            background-color: #219653;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav ul {
+                gap: 15px;
+            }
+
+            .banner h2 {
+                font-size: 32px;
+            }
+
+            .banner p {
+                font-size: 16px;
+            }
+
+            .cart-sidebar {
+                width: 100%;
+            }
+            }
+        .welcome-message {
+            background-color: #1e5799;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Add styles for the add vehicle form */
+        .add-vehicle-form {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        /* Sepet için ek stiller */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #27ae60;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 30px 0;
+            color: #777;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .quantity-btn {
+            width: 20px;
+            height: 20px;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .quantity-btn:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><i class="fas fa-car"></i> OtoSatış</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/dashboard" class="active" >Ana Sayfa</a></li>
+                        <li><a href="/catalog" >Araçlar</a></li>
+                        <li><a href="/add_vehicle">Araç Ekle</a></li>
+                        <li><a href="/araclarim">Araçlarım</a></li>
+                        <li><a href="/iletisim">İletişim Destek</a></li>
+                    </ul>
+                </nav>
+                <div class="user-actions">
+                    
+                    <div class="user-info" id="user-info">
+
+                        <span>{{ username }}</span>
+                        <a href="/logout" class="logout-btn" id="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Çıkış
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+</head>
+
+<div class="welcome-message">
+    <div class="container">
+        Hoş geldiniz, {{ username }}!
+    </div>
+</div>
+<div class="banner">
+    <div class="container">
+        <div class="banner-content">
+            <h2>Hayalinizdeki Araca Kavuşun</h2>
+            <p>Binlerce araç seçeneği ile size en uygun aracı bulun</p>
+            <a href="/catalog" class="btn-primary">Araçları Keşfedin</a>
+        </div>
+    </div>
+</div>
+
+<section class="featured-section">
+    <div class="container">
+        <h2 class="section-title">Öne Çıkan Araçlar</h2>
+        <div class="car-list">
+            <div class="car-card">
+                <img src="static/images/Peugeot-beyaz.jpeg" alt="Peugeot Rifter">
+                <h3>Peugeot Rifter</h3>
+                <div class="car-specs">
+                    <div class="car-spec">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>2020</span>
+                    </div>
+                    <div class="car-spec">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>60.000 km</span>
+                    </div>
+                    <div class="car-spec">
+                        <i class="fas fa-gas-pump"></i>
+                        <span>Dizel</span>
+                    </div>
+                </div>
+                <div class="car-info">
+                    <div class="car-price">900.000 ₺</div>
+                    <div class="car-actions">
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="car-card">
+                <img src="static/images/bmwR1250GS-motor-gri.jpeg" alt="BMW R 1250 GS">
+                <h3>BMW R 1250 GS</h3>
+                <div class="car-specs">
+                    <div class="car-spec">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>2023</span>
+                    </div>
+                    <div class="car-spec">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>5000</span>
+                    </div>
+                    <div class="car-spec">
+                        <i class="fas fa-gas-pump"></i>
+                        <span>Benzin</span>
+                    </div>
+                </div>
+                <div class="car-info">
+                    <div class="car-price">1.150.000 ₺</div>
+                    <div class="car-actions">
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="car-card">
+                <img src="static/images/mercedes-beyaz.jpeg" alt="Mercedes C200">
+                <h3>Mercedes C200</h3>
+                <div class="car-specs">
+                    <div class="car-spec">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>2021</span>
+                    </div>
+                    <div class="car-spec">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>30.000 km</span>
+                    </div>
+                    <div class="car-spec">
+                        <i class="fas fa-gas-pump"></i>
+                        <span>Benzin</span>
+                    </div>
+                </div>
+                <div class="car-info">
+                    <div class="car-price">3.550.000 ₺</div>
+                    <div class="car-actions">
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="car-card">
+                <img src="static/images/bmw-siyah.jpeg" alt="BMW 3. Serisi">
+                <h3>BMW 3. Serisi</h3>
+                <div class="car-specs">
+                    <div class="car-spec">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>2022</span>
+                    </div>
+                    <div class="car-spec">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>25.000 km</span>
+                    </div>
+                    <div class="car-spec">
+                        <i class="fas fa-gas-pump"></i>
+                        <span>Benzin</span>
+                    </div>
+                </div>
+                <div class="car-info">
+                    <div class="car-price">3.850.000 ₺</div>
+                    <div class="car-actions">
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="car-card">
+                <img src="static/images/fordTransit-gri.jpeg" alt="Ford Transit">
+                <h3>Ford Transit</h3>
+                <div class="car-specs">
+                    <div class="car-spec">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>2018</span>
+                    </div>
+                    <div class="car-spec">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>120.000 km</span>
+                    </div>
+                    <div class="car-spec">
+                        <i class="fas fa-gas-pump"></i>
+                        <span>Dizel</span>
+                    </div>
+                </div>
+                <div class="car-info">
+                    <div class="car-price">1.000.000 ₺</div>
+                    <div class="car-actions">
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="car-card">
+                <img src="static/images/rangeRover-gri.jpeg" alt="Land Rover Range Rover Evoque">
+                <h3>Land Rover Range Rover Evoque</h3>
+                <div class="car-specs">
+                    <div class="car-spec">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>2021</span>
+                    </div>
+                    <div class="car-spec">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>38.000 km</span>
+                    </div>
+                    <div class="car-spec">
+                        <i class="fas fa-gas-pump"></i>
+                        <span>Dizel</span>
+                    </div>
+                </div>
+                <div class="car-info">
+                    <div class="car-price">2.650.000 ₺</div>
+                    <div class="car-actions">
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<script>
+    document.getElementById("auth-btn").addEventListener("click", function () {
+ window.location.href = "/login_page";
+ });
+
+ document.getElementById("reg-btn").addEventListener("click", function () {
+ window.location.href = "/register_page";
+ });
+</script>
+<script>
+    // Sepet işlemleri için gerekli değişkenler
+    let cart = [];
+    const cartIcon = document.getElementById('cart-icon');
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const cartClose = document.getElementById('cart-close');
+    const cartItems = document.getElementById('cart-items');
+    const cartTotalPrice = document.getElementById('cart-total-price');
+    const cartCount = document.querySelector('.cart-count');
+    const checkoutBtn = document.getElementById('checkout-btn');
+
+    // Lokal depolamadan sepeti yükle (eğer varsa)
+    function loadCart() {
+        const savedCart = localStorage.getItem('cart');
+        if (savedCart) {
+            cart = JSON.parse(savedCart);
+            updateCartDisplay();
+        }
+    }
+
+    // Sepeti kaydet
+    function saveCart() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    // Sepeti güncelle
+    function updateCartDisplay() {
+        cartItems.innerHTML = '';
+        let total = 0;
+
+        cart.forEach((item, index) => {
+            total += item.price * item.quantity;
+
+            const cartItem = document.createElement('div');
+            cartItem.className = 'cart-item';
+            cartItem.innerHTML = `
+                <img src="${item.image || '/api/placeholder/80/60'}" class="cart-item-img" alt="${item.name}">
+                <div class="cart-item-details">
+                    <div class="cart-item-title">${item.name}</div>
+                    <div class="cart-item-price">${formatPrice(item.price)} ₺</div>
+                    <div class="cart-item-quantity">
+                        <button class="quantity-btn minus" data-index="${index}">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="quantity-btn plus" data-index="${index}">+</button>
+                    </div>
+                </div>
+                <button class="cart-item-remove" data-index="${index}">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            cartItems.appendChild(cartItem);
+        });
+
+        cartTotalPrice.textContent = formatPrice(total) + ' ₺';
+        cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+        // Sepet boşsa özel mesaj göster
+        if (cart.length === 0) {
+            cartItems.innerHTML = '<div class="empty-cart">Sepetiniz boş</div>';
+        }
+    }
+
+    // Fiyat formatı (1000000 -> 1.000.000)
+    function formatPrice(price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    // Sepeti aç
+    cartIcon.addEventListener('click', () => {
+        cartSidebar.classList.add('active');
+    });
+
+    // Sepeti kapat
+    cartClose.addEventListener('click', () => {
+        cartSidebar.classList.remove('active');
+    });
+
+    // Sepet dışına tıklandığında sepeti kapat
+    document.addEventListener('click', (e) => {
+        if (!cartSidebar.contains(e.target) && e.target !== cartIcon && !cartIcon.contains(e.target)) {
+            cartSidebar.classList.remove('active');
+        }
+    });
+
+    // Sepete ürün ekle
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.add-to-cart')) {
+            const button = e.target.closest('.add-to-cart');
+            const id = button.dataset.id;
+            const name = button.dataset.name;
+            const price = parseInt(button.dataset.price);
+            const image = button.closest('.car-card').querySelector('img').src;
+
+            // Sepette bu ürün var mı kontrol et
+            const existingItem = cart.find(item => item.id === id);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id,
+                    name,
+                    price,
+                    image,
+                    quantity: 1
+                });
+            }
+
+            saveCart();
+            updateCartDisplay();
+
+            // Sepeti göster
+            cartSidebar.classList.add('active');
+
+            // Bildirim göster
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = `${name} sepete eklendi`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('show');
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }, 2000);
+            }, 10);
+        }
+    });
+
+    // Ürün miktarını değiştir
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('quantity-btn')) {
+            const index = parseInt(e.target.dataset.index);
+
+            if (e.target.classList.contains('plus')) {
+                cart[index].quantity += 1;
+            } else if (e.target.classList.contains('minus')) {
+                if (cart[index].quantity > 1) {
+                    cart[index].quantity -= 1;
+                } else {
+                    cart.splice(index, 1);
+                }
+            }
+
+            saveCart();
+            updateCartDisplay();
+        }
+    });
+
+    // Ürünü sepetten kaldır
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.cart-item-remove')) {
+            const index = parseInt(e.target.closest('.cart-item-remove').dataset.index);
+            cart.splice(index, 1);
+            saveCart();
+            updateCartDisplay();
+        }
+    });
+
+    // Ödeme yap
+    checkoutBtn.addEventListener('click', () => {
+        if (cart.length === 0) {
+            alert('Sepetiniz boş');
+            return;
+        }
+
+        // Ödeme sayfasına yönlendir
+        window.location.href = '/checkout';
+    });
+
+    // Sayfa yüklendiğinde sepeti yükle
+    document.addEventListener('DOMContentLoaded', loadCart);
+</script>
+
+
+</body>
+</html>

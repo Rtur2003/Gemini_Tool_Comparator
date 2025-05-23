@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OtoSatış - Araç Ekle</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo h1 {
+            color: #1e5799;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: #555;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 0;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #1e5799;
+        }
+
+        nav a.active {
+            color: #1e5799;
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #1e5799;
+            border-radius: 3px;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .cart-icon {
+            position: relative;
+            font-size: 20px;
+            color: #555;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .cart-icon:hover {
+            color: #1e5799;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-info span {
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background-color: transparent;
+            color: #555;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+
+        .logout-btn:hover {
+            color: #1e5799;
+        }
+
+        /* Welcome Message */
+        .welcome-message {
+            background-color: #1e5799;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Page Title */
+        .page-title {
+            text-align: center;
+            margin: 40px 0;
+            color: #333;
+            font-size: 32px;
+            position: relative;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: #1e5799;
+        }
+
+        /* Add Vehicle Form */
+        .add-vehicle-form {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 60px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #1e5799;
+            outline: none;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .btn-primary {
+            background-color: #1e5799;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: #144a80;
+        }
+
+        .image-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .image-preview {
+            width: 300px;
+            height: 180px;
+            border-radius: 10px;
+            border: 2px dashed #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .image-placeholder {
+            color: #999;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .image-placeholder i {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav ul {
+                gap: 15px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><i class="fas fa-car"></i> OtoSatış</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/dashboard" >Ana Sayfa</a></li>
+                        <li><a href="/catalog">Araçlar</a></li>
+                        <li><a href="/add_vehicle"class="active">Araç Ekle</a></li>
+                        <li><a href="/iletisim">İletişim Destek</a></li>
+                    </ul>
+                </nav>
+                <div class="user-actions">
+                    <div class="cart-icon" id="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </div>
+                    <div class="user-info" id="user-info">
+                        
+                        <span>{{ username }}</span>
+                        <a href="/logout" class="logout-btn" id="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Çıkış
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="welcome-message">
+        <div class="container">
+            Hoş geldiniz, {{ username }}!
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="page-title">Araç Ekle</h2>
+
+        <form class="add-vehicle-form" action="/save_vehicle" method="post" enctype="multipart/form-data">
+           <div class="form-row">
+    <div class="form-group">
+        <label for="marka">Marka</label>
+        <input type="text" id="marka" name="marka" required>
+    </div>
+    <div class="form-group">
+        <label for="model">Model</label>
+        <input type="text" id="model" name="model" required>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="uretimYili">Üretim Yılı</label>
+        <input type="number" id="uretimYili" name="uretimYili" min="1900" max="2025" required>
+    </div>
+    <div class="form-group">
+        <label for="kilometre">Kilometre</label>
+        <input type="number" id="kilometre" name="kilometre" min="0" required>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="yakitTuru">Yakıt Türü</label>
+        <select id="yakitTuru" name="yakitTuru" required>
+            <option value="">Seçiniz</option>
+            <option value="Benzin">Benzin</option>
+            <option value="Dizel">Dizel</option>
+            <option value="Hibrit">Hibrit</option>
+            <option value="Elektrik">Elektrik</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="vitesTuru">Vites Türü</label>
+        <select id="vitesTuru" name="vitesTuru" required>
+            <option value="">Seçiniz</option>
+            <option value="Otomatik">Otomatik</option>
+            <option value="Manuel">Manuel</option>
+            <option value="Yarı Otomatik">Yarı Otomatik</option>
+        </select>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="yakitTuketimi">Yakıt Tüketimi</label>
+        <input type="text" id="yakitTuketimi" name="yakitTuketimi" placeholder="Örn: 6.5 L/100km" required>
+    </div>
+    <div class="form-group">
+        <label for="motorHacmi">Motor Hacmi (cc)</label>
+        <input type="number" id="motorHacmi" name="motorHacmi" min="0" required>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="motorGucu">Motor Gücü (hp/bg)</label>
+        <input type="number" id="motorGucu" name="motorGucu" min="0" required>
+    </div>
+    <div class="form-group">
+        <label for="govdeTuru">Gövde Türü</label>
+        <select id="govdeTuru" name="govdeTuru" required>
+            <option value="">Seçiniz</option>
+            <option value="Otomobil">Otomobil</option>
+            <option value="SUV">SUV</option>
+            <option value="Ticari">Ticari</option>
+            <option value="Motosiklet">Motosiklet</option>
+        </select>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="kasaTuru">Kasa Türü</label>
+        <select id="kasaTuru" name="kasaTuru" required>
+            <option value="">Seçiniz</option>
+            <option value="Sedan">Sedan</option>
+            <option value="Hatchback">Hatchback</option>
+            <option value="Coupe">Coupe</option>
+            <option value="Cabrio">Cabrio</option>
+            <option value="Station Wagon">Station Wagon</option>
+            <option value="Pickup">Pickup</option>
+            <option value="Minivan">Minivan</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="yolcuKapasitesi">Yolcu Kapasitesi</label>
+        <input type="number" id="yolcuKapasitesi" name="yolcuKapasitesi" min="1" max="100" required>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="bagajHacmi">Bagaj Hacmi (litre)</label>
+        <input type="number" id="bagajHacmi" name="bagajHacmi" min="0" required>
+    </div>
+    <div class="form-group">
+        <label for="kapiSayisi">Kapı Sayısı</label>
+        <select id="kapiSayisi" name="kapiSayisi" required>
+            <option value="">Seçiniz</option>
+            <option value="2">2</option>
+            <option value="4">4</option>
+        </select>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="fiyat">Fiyat (₺)</label>
+        <input type="number" id="fiyat" name="fiyat" min="0" step="0.01" required>
+    </div>
+    <div class="form-group">
+        <label for="renk">Renk</label>
+        <input type="text" id="renk" name="renk" required>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="hasarDurumu">Hasar Durumu</label>
+        <textarea id="hasarDurumu" name="hasarDurumu" rows="2" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="hasarMaliyeti">Hasar Maliyeti (₺)</label>
+        <input type="number" id="hasarMaliyeti" name="hasarMaliyeti" min="0" step="0.01" required>
+    </div>
+</div>
+            <div class="form-group">
+                <label for="vehicle_image">Araç Fotoğrafı</label>
+                <div class="image-upload">
+                    <div class="image-preview">
+                        <div class="image-placeholder" id="image-placeholder">
+                            <i class="fas fa-camera"></i>
+                            <p>Fotoğraf yüklemek için tıklayın</p>
+                        </div>
+                        <img id="preview-image" src="#" alt="Araç Önizleme">
+                    </div>
+                    <input type="file" id="vehicle_image" name="vehicle_image" accept="image/*" style="display: none;" required>
+                    <button type="button" id="upload-button" class="btn-primary">Fotoğraf Seç</button>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" class="btn-primary">Araç Ekle</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Image preview functionality
+        document.getElementById('upload-button').addEventListener('click', function() {
+            document.getElementById('vehicle_image').click();
+        });
+
+        document.getElementById('vehicle_image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.getElementById('preview-image');
+                    img.src = event.target.result;
+                    img.style.display = 'block';
+                    document.getElementById('image-placeholder').style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form doğrulama ve gönderme işlemleri için JavaScript
+document.querySelector('.add-vehicle-form').addEventListener('submit', function(e) {
+    e.preventDefault(); // Formun normal gönderimini engelle
+
+    // Tüm input ve select elementlerini al
+    const formElements = this.querySelectorAll('input, select, textarea');
+    let isValid = true;
+    let errorMessages = [];
+
+    // Her bir form elemanını kontrol et
+    formElements.forEach(element => {
+        // Boş alan kontrolü
+        if (element.hasAttribute('required') && !element.value.trim()) {
+            isValid = false;
+            errorMessages.push(`${element.previousElementSibling.textContent} alanı boş bırakılamaz.`);
+            element.style.borderColor = 'red';
+        } else {
+            element.style.borderColor = '#ddd';
+        }
+
+        // Sayısal değer kontrolleri
+        if (element.type === 'number' && element.value) {
+            const val = Number(element.value);
+            const min = element.hasAttribute('min') ? Number(element.getAttribute('min')) : null;
+            const max = element.hasAttribute('max') ? Number(element.getAttribute('max')) : null;
+
+            if (min !== null && val < min) {
+                isValid = false;
+                errorMessages.push(`${element.previousElementSibling.textContent} en az ${min} olmalıdır.`);
+                element.style.borderColor = 'red';
+            } else if (max !== null && val > max) {
+                isValid = false;
+                errorMessages.push(`${element.previousElementSibling.textContent} en fazla ${max} olmalıdır.`);
+                element.style.borderColor = 'red';
+            }
+        }
+    });
+
+    // Fotoğraf seçildi mi kontrolü
+    const vehicleImage = document.getElementById('vehicle_image');
+    if (vehicleImage.files.length === 0) {
+        isValid = false;
+        errorMessages.push('Araç fotoğrafı eklemeniz gerekmektedir.');
+    }
+
+    // Form geçerli değilse hata mesajlarını göster
+    if (!isValid) {
+        // Mevcut hata mesajlarını temizle
+        const existingAlert = document.getElementById('form-alert');
+        if (existingAlert) {
+            existingAlert.remove();
+        }
+
+        // Hata mesajı oluştur
+        const alertDiv = document.createElement('div');
+        alertDiv.id = 'form-alert';
+        alertDiv.style.backgroundColor = '#f8d7da';
+        alertDiv.style.color = '#721c24';
+        alertDiv.style.padding = '15px';
+        alertDiv.style.borderRadius = '5px';
+        alertDiv.style.marginBottom = '20px';
+        alertDiv.style.fontWeight = '500';
+
+        const errorList = document.createElement('ul');
+        errorList.style.paddingLeft = '20px';
+        errorList.style.marginTop = '10px';
+
+        errorMessages.forEach(message => {
+            const li = document.createElement('li');
+            li.textContent = message;
+            errorList.appendChild(li);
+        });
+
+        alertDiv.textContent = 'Lütfen aşağıdaki hataları düzeltin:';
+        alertDiv.appendChild(errorList);
+
+        // Hata mesajını formun başına ekle
+        this.parentNode.insertBefore(alertDiv, this);
+
+        // Sayfayı en yukarı kaydır
+        window.scrollTo(0, alertDiv.offsetTop - 20);
+
+        return;
+    }
+
+    // Form geçerliyse formun verilerini al
+    const formData = new FormData(this);
+
+    // Ajax ile form verilerini gönder
+    fetch('/save_vehicle', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Başarılı mesajı göster
+            showSuccessMessage();
+            // Formu temizle
+            this.reset();
+            // Resim önizlemeyi sıfırla
+            document.getElementById('preview-image').style.display = 'none';
+            document.getElementById('image-placeholder').style.display = 'block';
+        } else {
+            // Sunucudan gelen hata mesajını göster
+            showErrorMessage(data.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showErrorMessage('Bir hata oluştu. Lütfen tekrar deneyin.');
+    });
+});
+
+// Başarı mesajı gösterme fonksiyonu
+function showSuccessMessage() {
+    // Mevcut mesajları temizle
+    clearMessages();
+
+    // Başarı mesajı oluştur
+    const successDiv = document.createElement('div');
+    successDiv.id = 'success-message';
+    successDiv.style.backgroundColor = '#d4edda';
+    successDiv.style.color = '#155724';
+    successDiv.style.padding = '15px';
+    successDiv.style.borderRadius = '5px';
+    successDiv.style.marginBottom = '20px';
+    successDiv.style.textAlign = 'center';
+    successDiv.style.fontWeight = '600';
+    successDiv.style.fontSize = '18px';
+
+    // İkon ekle
+    const icon = document.createElement('i');
+    icon.className = 'fas fa-check-circle';
+    icon.style.marginRight = '10px';
+    successDiv.appendChild(icon);
+
+    // Mesaj metni ekle
+    const messageText = document.createTextNode('Araç başarıyla kaydedildi!');
+    successDiv.appendChild(messageText);
+
+    // Mesajı sayfaya ekle
+    const form = document.querySelector('.add-vehicle-form');
+    form.parentNode.insertBefore(successDiv, form);
+
+    // Sayfayı en yukarı kaydır
+    window.scrollTo(0, successDiv.offsetTop - 20);
+
+    // 5 saniye sonra mesajı gizle
+    setTimeout(() => {
+        successDiv.style.display = 'none';
+    }, 5000);
+}
+
+// Hata mesajı gösterme fonksiyonu
+function showErrorMessage(message) {
+    // Mevcut mesajları temizle
+    clearMessages();
+
+    // Hata mesajı oluştur
+    const errorDiv = document.createElement('div');
+    errorDiv.id = 'error-message';
+    errorDiv.style.backgroundColor = '#f8d7da';
+    errorDiv.style.color = '#721c24';
+    errorDiv.style.padding = '15px';
+    errorDiv.style.borderRadius = '5px';
+    errorDiv.style.marginBottom = '20px';
+    errorDiv.style.textAlign = 'center';
+    errorDiv.style.fontWeight = '600';
+    errorDiv.style.fontSize = '18px';
+
+    // İkon ekle
+    const icon = document.createElement('i');
+    icon.className = 'fas fa-exclamation-triangle';
+    icon.style.marginRight = '10px';
+    errorDiv.appendChild(icon);
+
+    // Mesaj metni ekle
+    const messageText = document.createTextNode(message);
+    errorDiv.appendChild(messageText);
+
+    // Mesajı sayfaya ekle
+    const form = document.querySelector('.add-vehicle-form');
+    form.parentNode.insertBefore(errorDiv, form);
+
+    // Sayfayı en yukarı kaydır
+    window.scrollTo(0, errorDiv.offsetTop - 20);
+}
+
+// Mesajları temizleme fonksiyonu
+function clearMessages() {
+    const messages = document.querySelectorAll('#form-alert, #success-message, #error-message');
+    messages.forEach(message => message.remove());
+}
+    </script>
+</body>
+</html>

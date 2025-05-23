@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İletişim - Araç Sat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-bg: #f8f9fa;
+            --dark-text: #333;
+            --light-text: #fff;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--primary-color);
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            color: var(--light-text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: var(--secondary-color);
+        }
+
+        nav ul li a.active {
+            background-color: var(--secondary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            font-size: 2.5rem;
+        }
+
+        .contact-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+        }
+
+        .faq-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .faq-item {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .question {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .question:hover {
+            color: var(--primary-color);
+        }
+
+        .question::after {
+            content: '\f078';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            transition: all 0.3s ease;
+        }
+
+        .question.active::after {
+            transform: rotate(180deg);
+        }
+
+        .answer {
+            margin-top: 10px;
+            color: #555;
+            display: none;
+            padding-left: 10px;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .answer.show {
+            display: block;
+        }
+
+        /* Contact Box */
+        .contact-box {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+        }
+
+        .contact-box h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .contact-info {
+            margin-bottom: 20px;
+        }
+
+        .contact-info p {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-info i {
+            margin-right: 10px;
+            color: var(--primary-color);
+            width: 20px;
+            text-align: center;
+        }
+
+        .contact-form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .contact-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .contact-form textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .contact-form button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .contact-form button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Chat Support */
+        .support-chat {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            z-index: 1000;
+        }
+
+        .chat-button {
+            background-color: var(--primary-color);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: var(--box-shadow);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .chat-button:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        .chat-button-text {
+            position: absolute;
+            right: 70px;
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            font-size: 14px;
+            width: 200px;
+            color: var(--dark-text);
+            display: none;
+        }
+
+        .chat-button:hover .chat-button-text {
+            display: block;
+        }
+
+        .chatbox-container {
+            position: fixed;
+            right: 25px;
+            bottom: 100px;
+            width: 350px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            display: none;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .chatbox-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chatbox-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbox-header .close-btn {
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .chatbox-messages {
+            height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 80%;
+        }
+
+        .message.bot {
+            background-color: #f1f1f1;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.user {
+            background-color: var(--primary-color);
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .chatbox-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .chatbox-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            font-size: 14px;
+        }
+
+        .chatbox-input button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+
+        .chatbox-input button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .contact-container {
+                flex-direction: column;
+            }
+
+            .chatbox-container {
+                width: 90%;
+                right: 5%;
+                left: 5%;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        /* Typing indicator */
+.typing-indicator {
+    display: flex;
+    padding: 10px;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    margin: 0 2px;
+    background-color: #666;
+    border-radius: 50%;
+    display: inline-block;
+    animation: typing 1s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+/* Error message */
+.error-message {
+    color: #d32f2f;
+}
+
+/* Messages */
+.message {
+    padding: 10px 15px;
+    margin: 5px 0;
+    border-radius: 18px;
+    max-width: 80%;
+    line-height: 1.4;
+}
+
+.message.user {
+    background-color: #e3f2fd;
+    align-self: flex-end;
+}
+
+.message.bot {
+    background-color: #f1f1f1;
+    align-self: flex-start;
+}
+
+/* Chat container */
+#chatboxMessages {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    overflow-y: auto;
+    height: 300px;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <ul>
+                    <li><a href="/dashboard" >Ana Sayfa</a></li>
+                        <li><a href="/catalog">Araçlar</a></li>
+                        <li><a href="/add_vehicle">Araç Ekle</a></li>
+                        <li><a href="/araclarim">Araçlarım</a></li>
+                        <li><a href="/iletisim" class="active">İletişim Destek</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="container">
+            <h1 class="page-title">İletişim & Destek</h1>
+
+            <div class="contact-container">
+                <div class="faq-section">
+                    <h2>Sıkça Sorulan Sorular</h2>
+
+                    <div class="faq-item">
+                        <div class="question">Hesabıma giriş yapamıyorum, ne yapmalıyım?</div>
+                        <div class="answer">Şifrenizi sıfırlamayı deneyin. "Şifremi Unuttum" bağlantısını kullanarak e-posta adresinize sıfırlama bağlantısı gönderebilirsiniz. Sorun devam ederse destek ekibimize ulaşın.</div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="question">İlanımı yüklerken hata alıyorum, nasıl çözebilirim?</div>
+                        <div class="answer">İnternet bağlantınızı kontrol edin. Fotoğrafların boyutunun 5MB'dan küçük ve JPG/PNG formatında olduğundan emin olun. Tarayıcınızı güncelleyin veya farklı bir tarayıcı kullanmayı deneyin. Sorun devam ederse destek ekibimizle iletişime geçin.</div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="question">İlanım yayına alınmadı, neden?</div>
+                        <div class="answer">İlanınız incelemede olabilir (genellikle 24 saat içinde onaylanır) veya eksik/hatalı bilgi içerebilir. Girdiğiniz bilgileri gözden geçirin, özellikle fiyat, konum ve araç özellikleri kısımlarını kontrol edin. Güncelleyerek tekrar deneyebilirsiniz.</div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="question">İlanımı silemiyorum/düzenleyemiyorum, ne yapmalıyım?</div>
+                        <div class="answer">"Hesabım" bölümünden "İlanlarım" sekmesine giderek işlem yapabilirsiniz. İlanınızın durumuna göre (incelemede, yayında, askıda) bazı işlemler kısıtlanmış olabilir. Teknik bir sorun varsa destek ekibimiz yardımcı olabilir.</div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="question">Web sitesi açılmıyor veya çok yavaş, neden?</div>
+                        <div class="answer">Tarayıcınızı yenileyin, önbelleği temizleyin ve internet bağlantınızı kontrol edin. Farklı bir tarayıcı kullanmayı deneyin. Sorun devam ederse kısa süreli bakım çalışması olabilir, sosyal medya hesaplarımızdan güncel bilgilere ulaşabilirsiniz.</div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="question">Fotoğraf yükleyemiyorum, neden?</div>
+                        <div class="answer">Fotoğraf boyutunun 5MB'dan küçük olduğundan ve desteklenen formatlarda (JPG, PNG) olduğundan emin olun. Fotoğrafların çözünürlüğünün çok yüksek olmadığını kontrol edin. Sorun devam ederse teknik destek ekibimize yazabilirsiniz.</div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="question">Satıcıyla iletişime geçemiyorum, ne yapmalıyım?</div>
+                        <div class="answer">Satıcı iletişim bilgilerini güncellememiş olabilir veya ilanını yayından kaldırmış olabilir. Birkaç gün içinde tekrar deneyebilir veya alternatif olarak başka ilanlara göz atabilirsiniz.</div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="question">Dolandırıcılıktan nasıl korunabilirim?</div>
+                        <div class="answer">Şüpheli tekliflerden kaçının, fiyatı piyasa değerinin çok altında olan araçlardan şüphelenin, araçları mutlaka yerinde görün ve kaparo/ödeme için güvenli yöntemler kullanın. Emin olmadığınız durumlarda destek ekibimizle iletişime geçebilirsiniz.</div>
+                    </div>
+                </div>
+
+                <div class="contact-box">
+                    <h2>Bizimle İletişime Geçin</h2>
+                    <div class="contact-info">
+                        <p><i class="fas fa-phone"></i> +90 (212) 555 1234</p>
+                        <p><i class="fas fa-envelope"></i> destek@aracsatwebsite.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Merkez Mahallesi, Bağcılar Caddesi No:123, İstanbul</p>
+                        <p><i class="fas fa-clock"></i> Pazartesi - Cuma: 09:00 - 18:00</p>
+                    </div>
+
+                    <div class="contact-form">
+                        <form>
+                            <div class="form-group">
+                                <label for="name">Adınız</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">E-posta Adresiniz</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Konu</label>
+                                <input type="text" id="subject" name="subject" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Mesajınız</label>
+                                <textarea id="message" name="message" required></textarea>
+                            </div>
+                            <button type="submit">Gönder</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="support-chat">
+        <div class="chat-button" onclick="toggleChatbox()">
+            <i class="fas fa-comment-dots"></i>
+            <div class="chat-button-text">Destek hattımıza bağlanmak için tıklayın!</div>
+        </div>
+
+        <div class="chatbox-container" id="chatboxContainer">
+            <div class="chatbox-header">
+                <div>Canlı Destek</div>
+                <div class="close-btn" onclick="toggleChatbox()"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="chatbox-messages" id="chatboxMessages">
+                <div class="message bot">Merhaba! Araç Sat destek ekibine hoş geldiniz. Size nasıl yardımcı olabiliriz?</div>
+            </div>
+            <div class="chatbox-input">
+                <input type="text" id="userInput" placeholder="Mesajınızı yazın..." onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Araç Sat. Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Accordion
+        document.querySelectorAll('.question').forEach(question => {
+            question.addEventListener('click', () => {
+                // Toggle active class
+                question.classList.toggle('active');
+    
+                // Toggle answer visibility
+                const answer = question.nextElementSibling;
+                if (answer.classList.contains('show')) {
+                    answer.classList.remove('show');
+                } else {
+                    answer.classList.add('show');
+                }
+            });
+        });
+    
+        // Chatbox Functions
+        function toggleChatbox() {
+            const chatboxContainer = document.getElementById('chatboxContainer');
+            chatboxContainer.classList.toggle('active');
+    
+            // Scroll to bottom of messages
+            if (chatboxContainer.classList.contains('active')) {
+                const chatboxMessages = document.getElementById('chatboxMessages');
+                chatboxMessages.scrollTop = chatboxMessages.scrollHeight;
+                document.getElementById('userInput').focus();
+            }
+        }
+    
+        async function sendMessage() {
+    const userInput = document.getElementById('userInput');
+    const chatboxMessages = document.getElementById('chatboxMessages');
+
+    if (userInput.value.trim() === '') return;
+
+    // 1. Kullanıcı mesajını göster
+    const userMessage = document.createElement('div');
+    userMessage.classList.add('message', 'user');
+    userMessage.textContent = userInput.value;
+    chatboxMessages.appendChild(userMessage);
+
+    // 2. Bekleme mesajı
+    const botWaitingMessage = document.createElement('div');
+    botWaitingMessage.classList.add('message', 'bot', 'waiting');
+    botWaitingMessage.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Yanıt oluşturuluyor...';
+    chatboxMessages.appendChild(botWaitingMessage);
+    
+    // 3. Scroll ve temizleme
+    chatboxMessages.scrollTop = chatboxMessages.scrollHeight;
+    const message = userInput.value;
+    userInput.value = '';
+
+    try {
+        const response = await fetch('/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: message })
+        });
+
+        const data = await response.json();
+
+        // 4. Yanıt işleme
+        botWaitingMessage.classList.remove('waiting');
+        
+        if (data.status === 'success') {
+            botWaitingMessage.textContent = data.data.response;
+        } else {
+            // Hata mesajlarını koda göre özelleştirme
+            let errorMsg = data.message;
+            if (data.code === 'EMPTY_MESSAGE') {
+                errorMsg = "Lütfen bir mesaj yazın";
+            }
+            botWaitingMessage.innerHTML = `<span class="error-message">${errorMsg}</span>`;
+        }
+
+    } catch (error) {
+        // 5. Network hataları
+        botWaitingMessage.classList.remove('waiting');
+        botWaitingMessage.innerHTML = `
+            <span class="error-message">
+                ${error.message.includes('429') 
+                    ? 'Çok fazla istek gönderildi. Lütfen 1 dakika bekleyin.' 
+                    : 'Bağlantı sorunu oluştu. Lütfen tekrar deneyin.'}
+            </span>`;
+    } finally {
+        chatboxMessages.scrollTop = chatboxMessages.scrollHeight;
+    }
+}   
+    
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+    </script>
+</body>
+</html>

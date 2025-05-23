@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - Yüz Tanıma Sistemi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        .container {
+            max-width: 90%;
+            width: 100%;
+        }
+        @media (min-width: 768px) {
+            .container {
+                max-width: 700px;
+            }
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: none;
+            padding: 20px;
+            background: white;
+        }
+        @media (min-width: 768px) {
+            .card {
+                padding: 30px;
+            }
+        }
+        .btn-custom {
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        @media (min-width: 768px) {
+            .btn-custom {
+                padding: 10px 30px;
+            }
+        }
+        .btn-primary {
+            background-color: #4361ee;
+            border-color: #4361ee;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+        .btn-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #3a3f51;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+                margin-bottom: 25px;
+            }
+        }
+        #videoElement {
+            width: 100%;
+            max-height: 50vh;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .canvas-container {
+            position: relative;
+            width: 100%;
+        }
+        #canvas {
+            display: none;
+        }
+        .status-text {
+            margin-top: 15px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        @media (min-width: 768px) {
+            .status-text {
+                font-size: 1rem;
+            }
+        }
+        .face-scan-animation {
+            width: 100%;
+            height: 4px;
+            background-color: #e8e8e8;
+            position: relative;
+            margin: 15px 0;
+            border-radius: 2px;
+        }
+        .face-scan-animation::before {
+            content: '';
+            position: absolute;
+            height: 100%;
+            background-color: #4361ee;
+            animation: scanning 2s ease-in-out infinite;
+            border-radius: 2px;
+        }
+        .face-detected {
+            border: 3px solid #28a745;
+            animation: pulse 1.5s infinite;
+        }
+        .form-control:focus {
+            border-color: #4361ee;
+            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+        @keyframes scanning {
+            0% { width: 0%; left: 0; }
+            50% { width: 20%; left: 40%; }
+            100% { width: 0%; left: 100%; }
+        }
+        .success-message {
+            color: #28a745;
+            font-weight: 600;
+            display: none;
+        }
+        .header-icon {
+            color: #4361ee;
+            margin-bottom: 15px;
+            font-size: 2.5rem;
+        }
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+        }
+        .password-info {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        .camera-container {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div class="text-center">
+            <div class="header-icon">
+                <i class="bi bi-person-badge"></i>
+            </div>
+            <h1>Yüz Tanıma ile Giriş</h1>
+        </div>
+
+        <div id="alertContainer" class="mb-3">
+            <!-- Flash mesajları için yer tutucu -->
+        </div>
+
+        <form id="loginForm" action="/login" method="POST">
+            <!-- Yeni eklenen kullanıcı adı alanı -->
+            <div class="mb-3">
+                <label for="username" class="form-label">Kullanıcı Adı</label>
+                <input type="text" class="form-control" id="username" name="username" required placeholder="Kullanıcı adınızı girin">
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">E-posta Adresi</label>
+                <input type="email" class="form-control" id="email" name="email" required placeholder="ornek@domain.com">
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Şifre</label>
+                <div class="input-group">
+                    <input type="password" class="form-control" id="password" name="password"
+                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required placeholder="Şifrenizi girin">
+                </div>
+                <div class="password-info">
+                    En az 8 karakter, bir büyük harf, bir küçük harf ve bir rakam içermelidir.
+                </div>
+            </div>
+
+            <div class="mb-4 camera-container">
+                <label class="form-label">Yüz Doğrulama</label>
+                <div class="canvas-container">
+                    <video id="videoElement" autoplay playsinline></video>
+                    <canvas id="canvas"></canvas>
+                </div>
+                <div class="face-scan-animation"></div>
+                <p id="scanStatus" class="status-text text-center">Kamera başlatılıyor...</p>
+                <p id="successMessage" class="success-message text-center">Yüz tanıma başarılı! Giriş yapılıyor...</p>
+            </div>
+
+            <input type="hidden" id="image_data" name="image_data">
+            <input type="hidden" id="face_detected" name="face_detected" value="false">
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <a href="/" class="btn btn-secondary btn-custom me-md-2">Geri Dön</a>
+                <button type="button" id="captureBtn" class="btn btn-primary btn-custom" disabled>
+                    Yüzünü Doğrula ve Giriş Yap
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"></script>
+<script>
+    // Mevcut JavaScript kodları aynı kalacak
+    const video = document.getElementById('videoElement');
+    const canvas = document.getElementById('canvas');
+    const captureBtn = document.getElementById('captureBtn');
+    const loginForm = document.getElementById('loginForm');
+    const scanStatus = document.getElementById('scanStatus');
+    const successMessage = document.getElementById('successMessage');
+    const faceDetectedInput = document.getElementById('face_detected');
+    let faceDetected = false;
+    let faceDetectionInterval;
+
+    // Kamera erişimi
+    async function startCamera() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    width: { ideal: 640 },
+                    height: { ideal: 480 },
+                    facingMode: 'user'
+                }
+            });
+            video.srcObject = stream;
+            scanStatus.textContent = "Kamera hazır. Yüzünüzü merkezde tutun.";
+            setTimeout(() => {
+                captureBtn.disabled = false;
+            }, 1000);
+
+            // Yüz tanıma simülasyonu (gerçek uygulamada yüz tanıma API'si kullanılmalı)
+            simulateFaceDetection();
+        } catch (err) {
+            scanStatus.textContent = "Kamera erişimi reddedildi veya bir hata oluştu.";
+            console.error("Kamera erişim hatası:", err);
+        }
+    }
+
+    // Yüz tanıma simülasyonu
+    function simulateFaceDetection() {
+        // Gerçek bir yüz tanıma API'si kullanılmalıdır, bu sadece simülasyondur
+        let detectionCounter = 0;
+
+        faceDetectionInterval = setInterval(() => {
+            detectionCounter++;
+
+            if (detectionCounter >= 3) {
+                // Yüz tespit edildi
+                faceDetected = true;
+                faceDetectedInput.value = "true";
+                video.classList.add('face-detected');
+                scanStatus.textContent = "Yüz tespit edildi! Giriş yapmak için butona tıklayın.";
+                clearInterval(faceDetectionInterval);
+            } else {
+                scanStatus.textContent = `Yüz taranıyor... (${detectionCounter}/3)`;
+            }
+        }, 1000);
+    }
+
+    // Sayfa yüklendiğinde kamerayı başlat
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(startCamera, 500);
+    });
+
+    // Görüntü yakalama ve giriş yapma
+    captureBtn.addEventListener('click', function() {
+        if (!faceDetected) {
+            scanStatus.textContent = "Yüz tanıma başarısız. Lütfen yüzünüzü kameraya doğru konumlandırın.";
+            return;
+        }
+
+        const context = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Base64 formatında görüntü verisi
+        const imageData = canvas.toDataURL('image/jpeg');
+        document.getElementById('image_data').value = imageData;
+
+        scanStatus.style.display = "none";
+        successMessage.style.display = "block";
+        captureBtn.disabled = true;
+
+        // Doğrulama simülasyonu ve ardından form gönderimi
+        setTimeout(() => {
+            loginForm.submit();
+        }, 1500);
+    });
+
+    // Sayfa kapanırken kamera kapatma
+    window.addEventListener('beforeunload', () => {
+        if (video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+        }
+        if (faceDetectionInterval) {
+            clearInterval(faceDetectionInterval);
+        }
+    });
+</script>
+</body>
+</html>

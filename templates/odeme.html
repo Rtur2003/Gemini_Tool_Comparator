@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Araç Alım-Satım - Güvenli Ödeme Sayfası</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #3a86ff;
+            --secondary-color: #4361ee;
+            --accent-color: #2563eb;
+            --light-blue: #e9f2ff;
+            --text-color: #2d3748;
+            --error-color: #e53e3e;
+            --success-color: #10b981;
+            --border-color: #e2e8f0;
+            --input-bg: #f8fafc;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f7ff, #d0e1ff);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .payment-container {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            margin: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 700;
+            font-size: 28px;
+        }
+
+        .header p {
+            color: #64748b;
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            height: 3px;
+            width: 100%;
+            background-color: var(--border-color);
+            top: 25px;
+            z-index: 1;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            height: 3px;
+            width: 75%; /* 3. adıma kadar ilerliyor */
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            top: 25px;
+            left: 0;
+            z-index: 2;
+            transition: width 0.4s ease;
+        }
+
+        .progress-step {
+            width: 50px;
+            text-align: center;
+            z-index: 3;
+        }
+
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+            border: 2px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 10px;
+            color: #94a3b8;
+            font-weight: 600;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .step-circle::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: var(--light-blue);
+            z-index: -1;
+            transform: scale(0);
+            transition: transform 0.3s ease;
+        }
+
+        .step-label {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .completed .step-circle {
+            background-color: var(--light-blue);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .active .step-circle {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .active .step-circle::after {
+            transform: scale(1.4);
+            opacity: 0.2;
+        }
+
+        .active .step-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 5px;
+        }
+
+        .form-section h3 {
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-section h3 i {
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            background-color: var(--input-bg);
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.15);
+            background-color: white;
+        }
+
+        .input-field.error {
+            border-color: var(--error-color);
+            background-color: #fff5f5;
+        }
+
+        .input-icon {
+            position: absolute;
+            top: 45px;
+            right: 15px;
+            color: #94a3b8;
+        }
+
+        .card-details {
+            display: flex;
+            gap: 16px;
+        }
+
+        .card-details .form-group {
+            flex: 1;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
+            font-family: 'Poppins', sans-serif;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(58, 134, 255, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .security-info {
+            display: flex;
+            align-items: center;
+            margin-top: 24px;
+            padding: 12px;
+            background-color: var(--light-blue);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .security-info i {
+            color: var(--primary-color);
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .security-info span {
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        .card-icons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .card-icons i {
+            font-size: 28px;
+            color: #64748b;
+            transition: color 0.3s ease;
+        }
+
+        .card-icons .fa-cc-visa:hover {
+            color: #1a1f71;
+        }
+
+        .card-icons .fa-cc-mastercard:hover {
+            color: #eb001b;
+        }
+
+        .card-icons .fa-cc-amex:hover {
+            color: #006fcf;
+        }
+
+        .card-icons .fa-cc-discover:hover {
+            color: #ff6000;
+        }
+
+        .card-input-container {
+            position: relative;
+        }
+
+        .cvv-info {
+            position: absolute;
+            right: 15px;
+            top: 47px;
+            cursor: help;
+            color: #94a3b8;
+        }
+
+        .cvv-info:hover::after {
+            content: 'Kartınızın arkasındaki 3 haneli güvenlik kodu';
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background-color: #334155;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        /* Responsive tasarım */
+        @media (max-width: 550px) {
+            .payment-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            .card-details {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .progress-bar {
+                margin-bottom: 30px;
+            }
+
+            .step-circle {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+
+            .progress-step {
+                width: 40px;
+            }
+
+            .progress-bar::before,
+            .progress-bar::after {
+                top: 20px;
+            }
+
+            .step-label {
+                font-size: 11px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="header">
+            <h1>Araç Ödeme</h1>
+            <p>Güvenli ödeme işlemini tamamlayın</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-step completed">
+                <div class="step-circle">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="step-label">Seçim</div>
+            </div>
+            <div class="progress-step completed">
+                <div class="step-circle">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="step-label">Bilgiler</div>
+            </div>
+            <div class="progress-step active">
+                <div class="step-circle">3</div>
+                <div class="step-label">Ödeme</div>
+            </div>
+            <div class="progress-step">
+                <div class="step-circle">4</div>
+                <div class="step-label">Onay</div>
+            </div>
+        </div>
+
+        <div class="card-icons">
+            <i class="fab fa-cc-visa"></i>
+            <i class="fab fa-cc-mastercard"></i>
+            <i class="fab fa-cc-amex"></i>
+            <i class="fab fa-cc-discover"></i>
+        </div>
+
+        <form id="payment-form">
+            <div class="form-section">
+                <h3><i class="fas fa-credit-card"></i> Kart Bilgileri</h3>
+
+                <div class="form-group">
+                    <label for="card-holder">Kart Sahibinin Adı Soyadı:</label>
+                    <div class="card-input-container">
+                        <input type="text" id="card-holder" name="card-holder" class="input-field" placeholder="Ad Soyad" required>
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+                    <div id="card-holder-error" class="error-message">Geçersiz kart sahibi adı. Lütfen sayı içermeyen bir ad girin.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="card-number">Kart Numarası:</label>
+                    <div class="card-input-container">
+                        <input type="text" id="card-number" name="card-number" class="input-field" placeholder="1234 5678 9012 3456" required maxlength="19">
+                        <i class="fas fa-credit-card input-icon"></i>
+                    </div>
+                    <div id="card-number-error" class="error-message">Geçersiz kart numarası. Lütfen 16 haneli bir kart numarası girin.</div>
+                </div>
+
+                <div class="card-details">
+                    <div class="form-group">
+                        <label for="expiry-date">Son Kullanma Tarihi:</label>
+                        <div class="card-input-container">
+                            <input type="text" id="expiry-date" name="expiry-date" class="input-field" placeholder="AA/YY" required maxlength="5">
+                            <i class="fas fa-calendar-alt input-icon"></i>
+                        </div>
+                        <div id="expiry-date-error" class="error-message">Geçersiz son kullanma tarihi. Lütfen AA/YY formatında girin.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cvv">Güvenlik Kodu (CVV):</label>
+                        <div class="card-input-container">
+                            <input type="text" id="cvv" name="cvv" class="input-field" placeholder="123" required maxlength="3">
+                            <i class="fas fa-question-circle cvv-info"></i>
+                        </div>
+                        <div id="cvv-error" class="error-message">Geçersiz CVV. Lütfen 3 haneli bir güvenlik kodu girin.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3><i class="fas fa-map-marker-alt"></i> Fatura Bilgileri</h3>
+
+                <div class="form-group">
+                    <label for="address">Adres:</label>
+                    <div class="card-input-container">
+                        <input type="text" id="address" name="address" class="input-field" placeholder="Adres" required>
+                        <i class="fas fa-home input-icon"></i>
+                    </div>
+                </div>
+
+                <div class="card-details">
+                    <div class="form-group">
+                        <label for="city">Şehir:</label>
+                        <div class="card-input-container">
+                            <input type="text" id="city" name="city" class="input-field" placeholder="Şehir" required>
+                            <i class="fas fa-city input-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="zip">Posta Kodu:</label>
+                        <div class="card-input-container">
+                            <input type="text" id="zip" name="zip" class="input-field" placeholder="34000" required>
+                            <i class="fas fa-mailbox input-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-lock" style="margin-right: 8px;"></i>
+                Ödemeyi Tamamla
+            </button>
+        </form>
+
+        <div class="security-info">
+            <i class="fas fa-shield-alt"></i>
+            <span>Tüm bilgileriniz 256-bit SSL ile şifrelenmektedir ve güvenle korunmaktadır.</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('payment-form');
+            const cardHolderInput = document.getElementById('card-holder');
+            const cardNumberInput = document.getElementById('card-number');
+            const expiryDateInput = document.getElementById('expiry-date');
+            const cvvInput = document.getElementById('cvv');
+
+            // Kart sahibi adı - sayıların engellenmesi
+            cardHolderInput.addEventListener('input', function(e) {
+                // Sayıları kaldır
+                this.value = this.value.replace(/[0-9]/g, '');
+            });
+
+            // Kart numarası formatlaması - sadece sayılara izin ver
+            cardNumberInput.addEventListener('input', function(e) {
+                // Sadece rakamları tut
+                let cardNumber = this.value.replace(/\D/g, '');
+                // Her 4 rakamdan sonra boşluk ekle
+                let formattedNumber = '';
+                for (let i = 0; i < cardNumber.length; i++) {
+                    if (i > 0 && i % 4 === 0) {
+                        formattedNumber += ' ';
+                    }
+                    formattedNumber += cardNumber[i];
+                }
+                // En fazla 19 karakter (16 rakam + 3 boşluk)
+                this.value = formattedNumber.substring(0, 19);
+
+                // Kart markasını tespit et ve ikonu vurgula
+                const firstDigit = cardNumber.charAt(0);
+                const cardIcons = document.querySelectorAll('.card-icons i');
+
+                cardIcons.forEach(icon => {
+                    icon.style.opacity = 0.5;
+                });
+
+                if (firstDigit === '4') {
+                    document.querySelector('.fa-cc-visa').style.opacity = 1;
+                    document.querySelector('.fa-cc-visa').style.color = '#1a1f71';
+                } else if (firstDigit === '5') {
+                    document.querySelector('.fa-cc-mastercard').style.opacity = 1;
+                    document.querySelector('.fa-cc-mastercard').style.color = '#eb001b';
+                } else if (firstDigit === '3') {
+                    document.querySelector('.fa-cc-amex').style.opacity = 1;
+                    document.querySelector('.fa-cc-amex').style.color = '#006fcf';
+                } else if (firstDigit === '6') {
+                    document.querySelector('.fa-cc-discover').style.opacity = 1;
+                    document.querySelector('.fa-cc-discover').style.color = '#ff6000';
+                } else if (cardNumber.length === 0) {
+                    cardIcons.forEach(icon => {
+                        icon.style.opacity = 1;
+                        icon.style.color = '#64748b';
+                    });
+                }
+            });
+
+            // Son kullanma tarihi formatlaması - sadece sayılara izin ver
+            expiryDateInput.addEventListener('input', function(e) {
+                let input = this.value.replace(/\D/g, '');
+
+                // 2 rakamdan sonra '/' ekle
+                if (input.length > 2) {
+                    this.value = input.substring(0, 2) + '/' + input.substring(2, 4);
+                } else {
+                    this.value = input;
+                }
+            });
+
+            // CVV formatlaması - sadece rakam girişi
+            cvvInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/\D/g, '').substring(0, 3);
+            });
+
+            // Input focus animasyonu
+            const inputs = document.querySelectorAll('.input-field');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.querySelector('.input-icon').style.color = '#3a86ff';
+                });
+
+                input.addEventListener('blur', function() {
+                    this.parentElement.querySelector('.input-icon').style.color = '#94a3b8';
+                });
+            });
+
+            // Form gönderimi ve validasyon
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                let isValid = true;
+
+                // Tüm hata mesajlarını gizle
+                document.querySelectorAll('.error-message').forEach(el => {
+                    el.style.display = 'none';
+                });
+
+                // Tüm inputları normal hale getir
+                document.querySelectorAll('.input-field').forEach(el => {
+                    el.classList.remove('error');
+                });
+
+                // Kart sahibi adı validasyonu
+                if (/\d/.test(cardHolderInput.value)) {
+                    document.getElementById('card-holder-error').style.display = 'block';
+                    cardHolderInput.classList.add('error');
+                    isValid = false;
+                }
+
+                // Kart numarası validasyonu
+                if (cardNumberInput.value.replace(/\s/g, '').length !== 16) {
+                    document.getElementById('card-number-error').style.display = 'block';
+                    cardNumberInput.classList.add('error');
+                    isValid = false;
+                }
+
+                // Son kullanma tarihi validasyonu
+                if (!/^\d{2}\/\d{2}$/.test(expiryDateInput.value)) {
+                    document.getElementById('expiry-date-error').style.display = 'block';
+                    expiryDateInput.classList.add('error');
+                    isValid = false;
+                }
+
+                // CVV validasyonu
+                if (cvvInput.value.length !== 3 || !/^\d+$/.test(cvvInput.value)) {
+                    document.getElementById('cvv-error').style.display = 'block';
+                    cvvInput.classList.add('error');
+                    isValid = false;
+                }
+
+                // Eğer form geçerli ise
+                if (isValid) {
+                    // Form submit butonu animasyonu
+                    const submitBtn = document.querySelector('.submit-btn');
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İşleniyor...';
+                    submitBtn.disabled = true;
+
+                    // Gerçek bir uygulamada burada ödeme işlemi yapılır
+                    setTimeout(function() {
+                        alert('Ödeme başarıyla tamamlandı!');
+                        form.reset();
+                        submitBtn.innerHTML = '<i class="fas fa-lock" style="margin-right: 8px;"></i> Ödemeyi Tamamla';
+                        submitBtn.disabled = false;
+
+                        document.querySelectorAll('.card-icons i').forEach(icon => {
+                            icon.style.opacity = 1;
+                            icon.style.color = '#64748b';
+                            
+                        });
+                        window.location.href = '/onay'
+                    }, 1500);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

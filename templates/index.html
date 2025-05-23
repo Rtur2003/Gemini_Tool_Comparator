@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oto Satış - Araç Alım Satım Aracılık Hizmetleri</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <style>
+        :root {
+            --primary: #e63946;
+            --secondary: #457b9d;
+            --light: #f1faee;
+            --dark: #1d3557;
+            --accent: #a8dadc;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .card {
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            border: none;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            animation: lightBar 4s linear infinite;
+        }
+        
+        @keyframes lightBar {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+        
+        .btn-custom {
+            margin: 10px;
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.4s;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary);
+            border-color: var(--secondary);
+        }
+        
+        .btn-custom::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+            z-index: -1;
+        }
+        
+        .btn-custom:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-custom:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+        
+        h1 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-weight: 800;
+            font-size: 3.5rem;
+            letter-spacing: -1px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 30%;
+            right: 30%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+        
+        .lead {
+            color: var(--secondary);
+            font-weight: 500;
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+        }
+        
+        .company-info {
+            text-align: left;
+            margin-bottom: 40px;
+            position: relative;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: rgba(241, 250, 238, 0.5);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .company-info h4 {
+            color: var(--dark);
+            font-weight: 700;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .service-card {
+            border-radius: 15px;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+            background-color: var(--light);
+            transition: all 0.5s;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary);
+            transform: scaleY(0);
+            transition: transform 0.4s;
+            transform-origin: bottom;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-card:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            transition: all 0.5s;
+            background: rgba(230, 57, 70, 0.1);
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+        
+        .service-card:hover .service-icon {
+            transform: rotateY(360deg);
+            background: var(--primary);
+            color: white;
+        }
+        
+        .locations {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .location-badge {
+            background-color: var(--secondary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+        
+        .location-badge:hover {
+            background-color: white;
+            color: var(--secondary);
+            border-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(69, 123, 157, 0.3);
+        }
+        
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .slider {
+            width: 400%;
+            height: 100%;
+            display: flex;
+            transition: transform 1s ease-in-out;
+        }
+        
+        .slide {
+            width: 25%;
+            height: 100%;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+        }
+        
+        .slide-content {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            color: white;
+            text-align: left;
+            max-width: 70%;
+        }
+        
+        .slide-content h3 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .slide-content p {
+            font-size: 1.1rem;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        
+        .slider-nav {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .slider-dot.active {
+            background-color: white;
+            transform: scale(1.3);
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+            animation: pulse 15s infinite linear;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+        }
+        
+        .highlight-title {
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .highlight-text {
+            font-size: 1.1rem;
+            font-weight: 300;
+            max-width: 80%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .service-card {
+                margin-bottom: 20px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide-content {
+                left: 20px;
+                bottom: 20px;
+                max-width: 85%;
+            }
+            
+            .highlight-text {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+  
+    <div class="container">
+        <div class="card" data-aos="fade-up">
+            <h1 class="animate__animated animate__fadeInDown">Oto Satış</h1>
+            <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-1s">Araç alım ve satımlarında güvenilir aracınız</p>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Slider Eklendi -->
+            <div class="slider-container" data-aos="fade-up" data-aos-delay="100">
+                <div class="slider" id="imageSlider">
+                    <div class="slide" style="background-image: url('static/images/luxury-car-1.jpg')">
+                        <div class="slide-content">
+                            <h3>Premium Araç Seçenekleri</h3>
+                            <p>Hayalinizdeki aracı en uygun fiyatlarla sizinle buluşturuyoruz.</p>
+                        </div>
+                    </div>
+                    <div class="slide" style="background-image: url('static/images/happy-customer.jpg')">
+                        <div class="slide-content">
+                            <h3>Müşteri Memnuniyeti</h3>
+                            <p>Binlerce mutlu müşteri, güvenilir hizmet anlayışımızın göstergesidir.</p>
+                        </div>
+                    </div>
+                    <div class="slide" style="background-image: url('static/images/car-showroom.jpg')">
+                        <div class="slide-content">
+                            <h3>Profesyonel Danışmanlık</h3>
+                            <p>Uzman ekibimiz, her aşamada yanınızda.</p>
+                        </div>
+                    </div>
+                    <div class="slide" style="background-image: url('static/images/car-keys.jpg')">
+                        <div class="slide-content">
+                            <h3>Hızlı ve Güvenli İşlemler</h3>
+                            <p>Bürokratik işlemleri bize bırakın, zamandan tasarruf edin.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slider-nav">
+                    <div class="slider-dot active" data-index="0"></div>
+                    <div class="slider-dot" data-index="1"></div>
+                    <div class="slider-dot" data-index="2"></div>
+                    <div class="slider-dot" data-index="3"></div>
+                </div>
+            </div>
+            
+            <!-- İstatistik Kutuları Eklendi -->
+            <div class="stats-container" data-aos="fade-up">
+                <div class="stat-item">
+                    <div class="stat-number" id="counter-years">0</div>
+                    <div class="stat-label">Yıllık Deneyim</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="counter-cars">0</div>
+                    <div class="stat-label">Satılan Araç</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="counter-clients">0</div>
+                    <div class="stat-label">Mutlu Müşteri</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="counter-cities">0</div>
+                    <div class="stat-label">Hizmet İli</div>
+                </div>
+            </div>
+            
+            <div class="company-info" data-aos="fade-up">
+                <h4><i class="fas fa-info-circle me-2"></i>Hakkımızda</h4>
+                <p>Oto Satış, 2015 yılında kurulan ve Türkiye'nin çeşitli illerinde hizmet veren güvenilir bir araç alım-satım aracılık şirketidir. İki deneyimli otomobil uzmanımız, alıcılar ve satıcılar arasında köprü görevi görerek, adil ve şeffaf bir süreç sunmaktadır. Düşük komisyon oranlarımız ile araç alım-satım süreçlerinizi kolaylaştırıyor, gereksiz bürokratik işlemlerden sizi kurtarıyoruz.</p>
+            </div>
+            
+            <!-- Öne Çıkan Mesaj Kutusu Eklendi -->
+            <div class="highlight-box" data-aos="zoom-in">
+                <h3 class="highlight-title"><i class="fas fa-star me-2"></i>Neden Bizi Tercih Etmelisiniz?</h3>
+                <p class="highlight-text">Uzman ekibimiz, şeffaf fiyatlandırma politikamız ve müşteri odaklı yaklaşımımızla araç alım-satım süreçlerinizi sorunsuz hale getiriyoruz. Her adımda yanınızdayız!</p>
+            </div>
+            
+            <div class="row" data-aos="fade-up">
+                <div class="col-md-6">
+                    <div class="service-card" data-aos="flip-left" data-aos-delay="100">
+                        <div class="service-icon"><i class="fas fa-car"></i></div>
+                        <h5>Araç Alım Hizmetleri</h5>
+                        <p>Bütçenize ve ihtiyaçlarınıza uygun aracı bulma konusunda size yardımcı oluyoruz. Uzmanlarımız, piyasadaki en iyi fırsatları değerlendirerek, doğru aracı en uygun fiyata almanızı sağlar.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="service-card" data-aos="flip-right" data-aos-delay="200">
+                        <div class="service-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                        <h5>Araç Satış Hizmetleri</h5>
+                        <p>Aracınızı en yüksek değerinden satmanıza yardımcı oluyoruz. Geniş müşteri ağımız sayesinde, aracınızı hızlı ve kazançlı bir şekilde satmanızı sağlıyoruz.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h5 class="mt-5 mb-3" data-aos="fade-up"><i class="fas fa-map-marker-alt me-2"></i>Hizmet Verdiğimiz İller</h5>
+            <div class="locations" data-aos="fade-up">
+                <span class="location-badge animate__animated animate__fadeIn animate__delay-1s"><i class="fas fa-building me-1"></i>İstanbul</span>
+                <span class="location-badge animate__animated animate__fadeIn animate__delay-2s"><i class="fas fa-building me-1"></i>Ankara</span>
+                <span class="location-badge animate__animated animate__fadeIn animate__delay-3s"><i class="fas fa-building me-1"></i>İzmir</span>
+                <span class="location-badge animate__animated animate__fadeIn animate__delay-4s"><i class="fas fa-building me-1"></i>Bursa</span>
+                <span class="location-badge animate__animated animate__fadeIn animate__delay-5s"><i class="fas fa-building me-1"></i>Antalya</span>
+                <span class="location-badge animate__animated animate__fadeIn animate__delay-6s"><i class="fas fa-building me-1"></i>Adana</span>
+            </div>
+            
+            <div class="d-grid gap-3 d-md-block mt-5" data-aos="zoom-in">
+                <a href="{{ url_for('login_page') }}" class="btn btn-primary btn-lg btn-custom animate__animated animate__pulse animate__infinite"><i class="fas fa-sign-in-alt me-2"></i>Giriş Yap</a>
+                <a href="{{ url_for('register_page') }}" class="btn btn-success btn-lg btn-custom"><i class="fas fa-user-plus me-2"></i>Kayıt Ol</a>
+            </div>
+            <!-- İletişim & Destek Bölümü -->
+        <div class="text-center mt-5" data-aos="fade-up">
+            <a href="/iletisim" class="btn btn-outline-secondary btn-lg rounded-pill px-4 py-2" style="border-width: 2px; font-weight: 600;">
+                <i class="fas fa-headset me-2"></i>İLETİŞİM & DESTEK
+            </a>
+        </div>
+    </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        // AOS (Animate On Scroll) başlatma
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+        
+        // Sayaç animasyonu
+        function animateCounter(element, target, duration) {
+            let start = 0;
+            const step = 30;
+            const increment = target / (duration / step);
+            
+            const timer = setInterval(() => {
+                start += increment;
+                element.textContent = Math.floor(start);
+                
+                if (start >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                }
+            }, step);
+        }
+        
+        // Görsellerin olduğu slider için
+        let currentSlide = 0;
+        const slider = document.getElementById('imageSlider');
+        const dots = document.querySelectorAll('.slider-dot');
+        
+        function showSlide(index) {
+            currentSlide = index;
+            slider.style.transform = `translateX(-${index * 25}%)`;
+            
+            // Aktif dot'u güncelle
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+        }
+        
+        // Slider dot'larına tıklama olayı
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                showSlide(parseInt(dot.getAttribute('data-index')));
+            });
+        });
+        
+        // Otomatik slide değiştirme
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % 4;
+            showSlide(currentSlide);
+        }, 5000);
+        
+        // Sayfa görünür olduğunda sayaçları başlat
+        document.addEventListener('DOMContentLoaded', () => {
+            animateCounter(document.getElementById('counter-years'), 10, 2000); // 10 yıl
+            animateCounter(document.getElementById('counter-cars'), 5000, 3000); // 5000 araç
+            animateCounter(document.getElementById('counter-clients'), 8500, 3000); // 8500 müşteri
+            animateCounter(document.getElementById('counter-cities'), 6, 2000); // 6 il
+        });
+    </script>
+    
+</body>
+</html>
