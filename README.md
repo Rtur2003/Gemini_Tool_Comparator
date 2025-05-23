@@ -24,27 +24,45 @@ It allows users to log in, upload vehicle details and images, and compare cars s
 ```
 
 Gemini\_Tool\_Comparator/
+
 │
 ├── app.py                  # Main Flask application
+
 ├── .env                    # Environment variables (e.g. API keys)
+
 ├── requirements.txt        # Python package dependencies
+
 ├── README.md               # You're reading it!
+
 │
 ├── users\_db.pkl            # Pickled user login data
+
 ├── vehicles\_db.pkl         # Pickled vehicle data
+
 ├── SON\_Veritabani.sql      # Backup SQL database
+
 ├── Yeni Metin Belgesi.txt  # Notes or temporary text
+
 │
 ├── faces/                  # Face recognition data (if used)
+
 ├── gemini\_cache/           # Cache folder for Gemini outputs
+
 │
 ├── static/
+
 │   ├── css/                # Custom stylesheets
+
 │   ├── js/                 # JavaScript files
+
 │   ├── images/             # Icons, UI images
+
 │   └── uploads/            # Uploaded vehicle images
+
 │
+
 └── templates/              # HTML templates (Jinja2)
+
 
 ````
 
