@@ -149,7 +149,7 @@ This is a demo/educational tool. Always verify real-world data from reliable aut
 
 ## 📬 Contact
 
-Made with ❤️ by [@Rtur2003](https://github.com/Rtur2003), [@NilgunMelekBilgin](https://github.com/NilgunMelekBilgin)
+Made with ❤️ by [@Rtur2003](https://github.com/Rtur2003), [@NilgunMelekBilgin](https://github.com/NilgunMelekBilgin),[rumeysanavruzzz](https://github.com/rumeysanavruzzz) and []()
 For issues, suggestions, or contributions, feel free to open an issue or PR on GitHub.
 
 ---
